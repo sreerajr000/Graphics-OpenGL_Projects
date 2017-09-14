@@ -1,8 +1,8 @@
-15:59:12 **** Clean-only build of configuration Debug for project Tetris ****
+17:05:23 **** Clean-only build of configuration Debug for project Game _World ****
 make clean 
 rm -rf  ./main.o ./window.o  ./main.d ./window.d  Tetris
  
-15:59:20 **** Build of configuration Debug for project Tetris ****
+17:06:13 **** Build of configuration Debug for project Game _World ****
 make all 
 Building file: ../main.cpp
 Invoking: GCC C++ Compiler
@@ -96,8 +96,25 @@ Invoking: GCC C++ Compiler
 g++ -std=c++0x -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -I/usr/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"window.d" -MT"window.d" -o "window.o" "../window.cpp"
 Finished building: ../window.cpp
  
-Building target: Tetris
+Building target: Game _World
 Invoking: GCC C++ Linker
-g++ -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -o "Tetris"  ./main.o ./window.o   -lGLEW -lglfw -lGL -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter
-Finished building target: Tetris
+g++ -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -o "Game _World"  ./main.o ./window.o   -lGLEW -lglfw -lGL -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter
+Finished building target: Game _World
+ 
+17:06:36 **** Incremental Build of configuration Debug for project Game _World ****
+make all 
+make: Nothing to be done for 'all'.
+17:28:41 **** Build of configuration Debug for project GameWorld ****
+make all 
+Building target: GameWorld
+Invoking: GCC C++ Linker
+g++ -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -o "GameWorld"  ./main.o ./window.o   -lGLEW -lglfw -lGL -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter
+Finished building target: GameWorld
+ 
+17:31:11 **** Incremental Build of configuration Debug for project GameWorld ****
+make all 
+Building target: GameWorld
+Invoking: GCC C++ Linker
+g++ -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -o "GameWorld"  ./main.o ./window.o   -lGLEW -lglfw -lGL -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter
+Finished building target: GameWorld
  

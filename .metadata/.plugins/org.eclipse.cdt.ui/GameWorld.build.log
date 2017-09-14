@@ -1,0 +1,10 @@
+17:31:11 **** Incremental Build of configuration Debug for project GameWorld ****
+make all 
+Building target: GameWorld
+Invoking: GCC C++ Linker
+g++ -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -o "GameWorld"  ./main.o ./window.o   -lGLEW -lglfw -lGL -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter
+Finished building target: GameWorld
+ 
+
+17:31:14 Build Finished (took 2s.992ms)
+
