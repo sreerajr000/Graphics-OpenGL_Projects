@@ -1,0 +1,102 @@
+10:27:51 **** Build of configuration Debug for project Tetris ****
+make all 
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -I/usr/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
+In file included from ../mesh.h:11:0,
+                 from ../model.h:13,
+                 from ../main.cpp:16:
+../shader.h: In constructor ‘Shader::Shader(const char*, const char*, const char*)’:
+../shader.h:60:7: warning: unused variable ‘success’ [-Wunused-variable]
+   int success;
+       ^
+../shader.h:61:8: warning: unused variable ‘infoLog’ [-Wunused-variable]
+   char infoLog[512];
+        ^
+In file included from ../main.cpp:16:0:
+../model.h: In member function ‘btRigidBody* Model::createRigidBodyFromMesh(float, float, float, float)’:
+../model.h:54:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i < meshes.size(); i++) {
+                     ^
+../model.h:56:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j < vertices.size(); j++) {
+                      ^
+In file included from ../Tetris/tetris.h:12:0,
+                 from ../scene.h:3,
+                 from ../main.cpp:24:
+../Tetris/block.h: In member function ‘void Block::draw(Shader)’:
+../Tetris/block.h:38:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 0; i < blocks[blockid][orient].size(); i++) {
+                    ^
+../Tetris/block.h:39:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for(int j = 0; j < blocks[blockid][orient][i].size(); j++) {
+                     ^
+../Tetris/block.h: In member function ‘void Block::rotateBlock()’:
+../Tetris/block.h:53:49: warning: operation on ‘((Block*)this)->Block::orient’ may be undefined [-Wsequence-point]
+   orient = (++orient) % (blocks[blockid].size());
+                                                 ^
+../Tetris/block.h: In member function ‘void Block::urotateBlock()’:
+../Tetris/block.h:60:49: warning: operation on ‘((Block*)this)->Block::orient’ may be undefined [-Wsequence-point]
+   orient = (--orient) % (blocks[blockid].size());
+                                                 ^
+../Tetris/block.h: In member function ‘bool Block::checkCollision()’:
+../Tetris/block.h:67:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:68:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h:76:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:77:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h:85:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:86:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h: In member function ‘void Block::addtoFrame()’:
+../Tetris/block.h:104:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i < blk.size(); i++) {
+                     ^
+../Tetris/block.h:105:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j < blk[i].size(); j++) {
+                      ^
+In file included from ../scene.h:3:0,
+                 from ../main.cpp:24:
+../Tetris/tetris.h: In function ‘void drawFrame(Shader)’:
+../Tetris/tetris.h:17:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i < frame.size(); i++) {
+                   ^
+../Tetris/tetris.h:18:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int j = 0; j < frame[i].size(); j++) {
+                    ^
+../Tetris/tetris.h: In function ‘void checkClear()’:
+../Tetris/tetris.h:70:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i < frame.size(); i++){
+                   ^
+../Tetris/tetris.h:72:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int j = 0; j < frame[i].size(); j++){
+                    ^
+../main.cpp: In function ‘int main()’:
+../main.cpp:32:40: warning: ISO C++ forbids converting a string constant to ‘GLchar* {aka char*}’ [-Wwrite-strings]
+  Window window(1280, 720, "Shadow Test");
+                                        ^
+Finished building: ../main.cpp
+ 
+Building file: ../window.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -I/usr/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"window.d" -MT"window.d" -o "window.o" "../window.cpp"
+Finished building: ../window.cpp
+ 
+Building target: Tetris
+Invoking: GCC C++ Linker
+g++ -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -o "Tetris"  ./main.o ./window.o   -lGLEW -lglfw -lGL -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter
+Finished building target: Tetris
+ 
+
+10:27:54 Build Finished (took 2s.944ms)
+

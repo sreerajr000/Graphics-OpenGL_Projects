@@ -1,0 +1,27 @@
+04:34:08 **** Incremental Build of configuration Debug for project Engine ****
+make all 
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
+In file included from ../main.cpp:15:0:
+../shader.h: In constructor ‘Shader::Shader(const char*, const char*, const char*)’:
+../shader.h:61:7: warning: unused variable ‘success’ [-Wunused-variable]
+   int success;
+       ^
+../shader.h:62:8: warning: unused variable ‘infoLog’ [-Wunused-variable]
+   char infoLog[512];
+        ^
+../main.cpp: At global scope:
+../main.cpp:29:17: warning: ISO C++ forbids converting a string constant to ‘GLchar* {aka char*}’ [-Wwrite-strings]
+ GLchar *TITLE = "OpenGL Test";
+                 ^
+Finished building: ../main.cpp
+ 
+Building target: Engine
+Invoking: GCC C++ Linker
+g++  -o "Engine"  ./main.o ./window.o   -lGL -lglfw -lGLEW -lSOIL -lassimp
+Finished building target: Engine
+ 
+
+04:34:10 Build Finished (took 2s.79ms)
+

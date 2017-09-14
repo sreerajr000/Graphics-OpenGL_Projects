@@ -1,0 +1,86 @@
+/*
+ * tetris.h
+ *
+ *  Created on: 13-Sep-2017
+ *      Author: sree
+ */
+
+#pragma once
+
+std::vector<std::vector<int> > frame(18, std::vector<int>(10, 0));
+
+#include "block.h"
+
+Block block;
+
+void drawFrame(Shader shader) {
+	for(int i = 0; i < frame.size(); i++) {
+		for(int j = 0; j < frame[i].size(); j++) {
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(2.01f *GLfloat(j), 2.01f * GLfloat(i), 0.0f));
+			shader.setMat4("model", model);
+			box->Draw(shader);
+			/*if(frame[i][j]) {
+				model = glm::mat4();
+				//model = glm::translate(model, glm::vec3(2.01f *GLfloat(j), 2.01f * GLfloat(i), 0.0f));
+				shader.setMat4("model", model);
+				box->Draw(shader);
+			}*/
+		}
+	}
+}
+
+void clearFrame() {
+	frame.clear();
+	frame.resize(18, std::vector<int>(10, 0));
+}
+void display() {
+	for (auto x : frame) {
+		for (auto y : x)
+			cout << y << " ";
+		cout << "\n";
+	}
+	cout << "\n";
+}
+
+void step(Shader shader) {
+	if(moveLeft){
+		moveLeft = false;
+		block.x--;
+		if(block.checkCollision())
+			block.x++;
+	}
+	else if(moveRight){
+		moveRight = false;
+		block.x++;
+		if(block.checkCollision())
+			block.x--;
+	}
+	else if(moveDown) {
+		moveDown = false;
+		speed = 10;
+	}
+	else if(moveUp) {
+		moveUp = false;
+		block.rotateBlock();
+		//if(block.checkCollision())
+		//	block.urotateBlock();
+	}
+
+	drawFrame(shader);
+}
+
+
+
+void gameStep() {
+	block.y--;
+	if(block.checkCollision()){
+		block.addtoFrame();
+		display();
+		block.x = 4;
+		block.y = 15;
+		block.blockid = glm::floor(rand() % 7);
+	}
+}
+
+

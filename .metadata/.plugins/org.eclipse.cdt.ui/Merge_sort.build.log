@@ -1,0 +1,19 @@
+13:20:33 **** Incremental Build of configuration Debug for project Merge_sort ****
+make all 
+Building file: ../main.cu
+Invoking: NVCC Compiler
+/usr/local/cuda-8.0/bin/nvcc -I/usr/local/cuda-8.0/samples/common/inc/ -G -g -O0 -std=c++11 -gencode arch=compute_20,code=sm_20 -gencode arch=compute_20,code=sm_21  -odir "." -M -o "main.d" "../main.cu"
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+/usr/local/cuda-8.0/bin/nvcc -I/usr/local/cuda-8.0/samples/common/inc/ -G -g -O0 -std=c++11 --compile --relocatable-device-code=false -gencode arch=compute_20,code=compute_20 -gencode arch=compute_20,code=sm_21  -x cu -o  "main.o" "../main.cu"
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+Finished building: ../main.cu
+ 
+Building target: Merge_sort
+Invoking: NVCC Linker
+/usr/local/cuda-8.0/bin/nvcc --cudart static --relocatable-device-code=false -gencode arch=compute_20,code=compute_20 -gencode arch=compute_20,code=sm_21 -link -o  "Merge_sort"  ./main.o   
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+Finished building target: Merge_sort
+ 
+
+13:20:36 Build Finished (took 3s.226ms)
+

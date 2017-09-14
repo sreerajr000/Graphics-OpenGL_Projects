@@ -1,0 +1,12 @@
+/*
+ * tetris.h
+ *
+ *  Created on: 13-Sep-2017
+ *      Author: sree
+ */
+
+#pragma once
+
+#include "block.h"
+
+std::vector<std::vector<int> > frame (18, std::vector<int>(10, 0));

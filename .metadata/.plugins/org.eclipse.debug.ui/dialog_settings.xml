@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.debug.ui.SELECT_CONFIGURATION_TYPE_DIALOG">
+		<item value="238" key="DIALOG_WIDTH"/>
+		<item value="1|Apple Garamond|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="291" key="DIALOG_HEIGHT"/>
+	</section>
+	<section name="org.eclipse.debug.ui.LAUNCH_CONFIGURATION_PROPERTIES_DIALOG_SECTION">
+		<item value="1366" key="DIALOG_WIDTH"/>
+		<item value="1|Apple Garamond|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="725" key="DIALOG_HEIGHT"/>
+	</section>
+	<section name="org.eclipse.debug.ui.SCOPED_SAVE_SELECTION_DIALOG">
+		<item value="326" key="DIALOG_WIDTH"/>
+		<item value="1|Apple Garamond|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="495" key="DIALOG_HEIGHT"/>
+	</section>
+	<section name="org.eclipse.debug.ui.SELECT_LAUNCH_SHORTCUT_DIALOG">
+		<item value="242" key="DIALOG_WIDTH"/>
+		<item value="1|Apple Garamond|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="468" key="DIALOG_HEIGHT"/>
+	</section>
+</section>

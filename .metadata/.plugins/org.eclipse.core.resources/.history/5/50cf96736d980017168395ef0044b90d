@@ -1,0 +1,52 @@
+/*
+ * tetris.h
+ *
+ *  Created on: 13-Sep-2017
+ *      Author: sree
+ */
+
+#pragma once
+
+std::vector<std::vector<int> > frame(18, std::vector<int>(10, 0));
+
+#include "block.h"
+
+Block block;
+
+void clearFrame() {
+	frame.clear();
+	frame.resize(18, std::vector<int>(10, 0));
+}
+void display() {
+	for (auto x : frame) {
+		for (auto y : x)
+			cout << y << " ";
+		cout << "\n";
+	}
+	cout << "\n";
+}
+
+void step() {
+	if(moveLeft){
+		moveLeft = false;
+		block.x--;
+		if(block.checkCollision())
+			block.x++;
+	}
+	else if(moveRight){
+		moveRight = false;
+		block.x++;
+		if(block.checkCollision())
+			block.x--;
+	}
+	else if(moveDown) {
+		moveDown = false;
+	}
+	else if(moveUp) {
+		moveUp = false;
+		block.rotateBlock();
+		//if(block.checkCollision())
+		//	block.urotateBlock();
+	}
+
+}

@@ -1,0 +1,71 @@
+/*
+ * util.h
+ *
+ *  Created on: 12-Sep-2017
+ *      Author: sree
+ */
+
+#ifndef UTIL_H_
+#define UTIL_H_
+#include <iostream>
+
+
+// read data into a minimal linked list
+typedef struct {
+    int v;
+    void* next;
+} LinkNode;
+
+// helper function for reading numbers from stdin
+// it's 'optimized' not to check validity of the characters it reads in..
+long readList(long** list) {
+    tm();
+    long v, size = 0;
+    LinkNode* node = 0;
+    LinkNode* first = 0;
+    while (std::cin >> v) {
+        LinkNode* next = new LinkNode();
+        next->v = v;
+        if (node)
+            node->next = next;
+        else
+            first = next;
+        node = next;
+        size++;
+    }
+
+
+    if (size) {
+        *list = new long[size];
+        LinkNode* node = first;
+        long i = 0;
+        while (node) {
+            (*list)[i++] = node->v;
+            node = (LinkNode*) node->next;
+        }
+
+    }
+
+
+	std::cout << "read stdin: " << tm() << " microseconds\n";
+
+    return size;
+}
+
+
+//
+// Get the time (in microseconds) since the last call to tm();
+// the first value returned by this must not be trusted
+//
+timeval tStart;
+int tm() {
+    timeval tEnd;
+    gettimeofday(&tEnd, 0);
+    int t = (tEnd.tv_sec - tStart.tv_sec) * 1000000 + tEnd.tv_usec - tStart.tv_usec;
+    tStart = tEnd;
+    return t;
+}
+
+
+
+#endif /* UTIL_H_ */
