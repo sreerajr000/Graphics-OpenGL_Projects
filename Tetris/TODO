@@ -7,14 +7,15 @@ Threading Loading Models
 Play Cut Scenes (Play Video)
 
 **Game**
+Basic Tetris 						✔
 Tetris on Wall
 Wall Model
 Sound Effects
-Snow Fall(Probably Particle System)
-ControlFrameRate of Just Dropping
+Snow Fall(Probably Particle System)	
+ControlFrameRate of Just Dropping	✔
 Different Types of Boxes
 Box Clearing by Explosion
-Calibrate keyboard for single press
+Calibrate keyboard for single press	✔
 
 **Game**
 TRex with Dragon

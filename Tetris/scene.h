@@ -22,6 +22,10 @@ unsigned int planeVAO;
 // renders the 3D scene
 // --------------------
 void renderSceneContents(const Shader &shader) {
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(9.0f, 18.0f, -1.25f));
+	shader.setMat4("model", model);
+	backFrame->Draw(shader);
 	drawFrame(shader);
 	block->draw(shader);
 	// floor
@@ -219,5 +223,6 @@ void loadModels() {
 	plane = new Model("cyborg/plane.obj");
 	landscape = new Model("cyborg/landscape.obj");
 	box = new Model("cyborg/box.obj");
+	backFrame = new Model("cyborg/frame.obj");
 }
 

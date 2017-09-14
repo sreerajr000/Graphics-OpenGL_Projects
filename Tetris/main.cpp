@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <bullet/btBulletDynamicsCommon.h>
+#include <thread>
+
 
 #include "camera.h"
 glm::mat4 projection, view, model;
@@ -14,7 +16,7 @@ int speed = 1;
 Camera camera(glm::vec3(0.0f, 2.0f, 15.0f));
 btRigidBody *cameraBody;
 #include "model.h"
-Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box;
+Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame;
 float stepFrame = 0.0f;
 #include "window.h"
 #include "shader.h"
