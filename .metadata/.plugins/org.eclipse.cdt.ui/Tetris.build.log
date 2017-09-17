@@ -1,4 +1,4 @@
-15:59:20 **** Build of configuration Debug for project Tetris ****
+11:13:03 **** Build of configuration Debug for project Tetris ****
 make all 
 Building file: ../main.cpp
 Invoking: GCC C++ Compiler
@@ -98,5 +98,5 @@ g++ -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -o "Tetris"  ./main.o ./window.
 Finished building target: Tetris
  
 
-15:59:24 Build Finished (took 4s.656ms)
+11:13:06 Build Finished (took 2s.968ms)
 

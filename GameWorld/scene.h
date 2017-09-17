@@ -28,10 +28,11 @@ void renderSceneContents(const Shader &shader) {
 	backFrame->Draw(shader);
 	drawFrame(shader);
 	block->draw(shader);
-	// floor
-	//model = glm::mat4();
-	//shader.setMat4("model", model);
-	//planeScene->Draw(shader);
+
+	model = glm::mat4();
+	model = glm::scale(model, glm::vec3(0.01f));
+	shader.setMat4("model", model);
+	landscape->Draw(shader);
 	// cubes
 
 	/*model = glm::mat4();

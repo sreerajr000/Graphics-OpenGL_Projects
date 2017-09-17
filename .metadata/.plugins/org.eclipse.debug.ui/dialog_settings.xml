@@ -6,9 +6,9 @@
 		<item value="291" key="DIALOG_HEIGHT"/>
 	</section>
 	<section name="org.eclipse.debug.ui.LAUNCH_CONFIGURATION_PROPERTIES_DIALOG_SECTION">
-		<item value="1366" key="DIALOG_WIDTH"/>
+		<item value="1346" key="DIALOG_WIDTH"/>
 		<item value="1|Apple Garamond|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="697" key="DIALOG_HEIGHT"/>
+		<item value="677" key="DIALOG_HEIGHT"/>
 	</section>
 	<section name="org.eclipse.debug.ui.SCOPED_SAVE_SELECTION_DIALOG">
 		<item value="326" key="DIALOG_WIDTH"/>
