@@ -10,6 +10,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd box/box.jpg
+map_Kd box/frame.png
 map_Bump box/box_bumpmap.jpg
 map_Ks box/box_SPEC.jpg

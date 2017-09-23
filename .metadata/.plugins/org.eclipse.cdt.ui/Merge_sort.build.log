@@ -1,4 +1,4 @@
-13:20:33 **** Incremental Build of configuration Debug for project Merge_sort ****
+07:12:11 **** Incremental Build of configuration Debug for project Merge_sort ****
 make all 
 Building file: ../main.cu
 Invoking: NVCC Compiler
@@ -15,5 +15,5 @@ nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecat
 Finished building target: Merge_sort
  
 
-13:20:36 Build Finished (took 3s.226ms)
+07:12:19 Build Finished (took 8s.402ms)
 

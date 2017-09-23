@@ -1,0 +1,14 @@
+# Blender MTL File: 'Guacamaya-2013fb24.blend'
+# Material Count: 1
+
+newmtl Guacamaya
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.041015 0.309144
+Ks 0.100000 0.100000 0.100000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd bird.png
+map_Bump -bm 0.050000 bird.png

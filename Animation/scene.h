@@ -1,6 +1,7 @@
 #pragma once
-
-#include "Tetris/tetris.h"
+void renderScene(Shader);
+void renderDepth(Shader);
+void renderSkyBox(Shader);
 unsigned int depthMap;
 unsigned int skyboxVAO, skyboxVBO;
 unsigned int cubemapTexture;
@@ -14,14 +15,31 @@ float near_plane = -100.0f, far_plane = 100.0f;
 // -------------
 glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
 
+
 // meshes
 unsigned int planeVAO;
-
+#include "Tetris/tetris.h"
 
 #pragma once
 // renders the 3D scene
 // --------------------
 void renderSceneContents(const Shader &shader) {
+	//Raven
+	model = glm::mat4();
+
+
+	model = glm::translate(model, camera.Position);
+	model = glm::translate(model, glm::vec3(2) * glm::vec3(camera.Front.x, -0.25f, camera.Front.z));
+	//model = glm::scale(model, glm::vec3(0.25f));
+	model = glm::rotate(model, -glm::radians(camera.Yaw - 90), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, float(glm::sin(glfwGetTime())) *0.25f, glm::vec3(1.0f, 1.0f, 1.0f));
+	raven->Draw(shader);
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, 8.0f, 0.0f));
+
+	shader.setMat4("model", model);
+	animation->Draw(shader);
 	model = glm::mat4();
 	model = glm::translate(model, glm::vec3(9.0f, 18.0f, -1.25f));
 	shader.setMat4("model", model);
@@ -31,49 +49,40 @@ void renderSceneContents(const Shader &shader) {
 	// floor
 	model = glm::mat4();
 	shader.setMat4("model", model);
-	planeScene->Draw(shader);
-	// cubes
-
-	/*model = glm::mat4();
-	model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0));
-	//model = glm::scale(model, glm::vec3(0.5f));
-	shader.setMat4("model", model);
-	cyborg->Draw(shader);
-
+	landscape->Draw(shader);
+	// floor
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(2.0f, 0.0f, 1.0));
-	model = glm::scale(model, glm::vec3(0.5f));
 	shader.setMat4("model", model);
-	cyborg->Draw(shader);
+	landscape_wall->Draw(shader);
 
-	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-2.0f, 0.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.5f));
-	shader.setMat4("model", model);
-	sphere->Draw(shader);*/
 
-	/*	for(int i = 0; i < bodies.size(); i++){
-	 if(bodies[i]->getCollisionShape()->getShapeType() == STATIC_PLANE_PROXYTYPE){
-	 renderPlane(bodies[i], i);
-	 shader.setMat4("model", model);
-	 plane->Draw(shader);
-	 //landscape->Draw(shader);
-	 //model = glm::translate(model, glm::vec3(0.0, 5.0, 0.0));
-	 //shader.setMat4("model", model);
-	 //plane->Draw(shader);
-	 }
-	 else if(bodies[i]->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE){
-	 renderSphere(bodies[i], i);
-	 shader.setMat4("model", model);
-	 sphere->Draw(shader);
-	 }
-	 else{
-	 model = glm::mat4();
-	 shader.setMat4("model", model);
-	 landscape->Draw(shader);
-	 }
-	 }
-	 */
+	/*for(int i = 0; i < bodies.size(); i++){
+		if(bodies[i]->getCollisionShape()->getShapeType() == STATIC_PLANE_PROXYTYPE){
+			renderPlane(bodies[i], i);
+			shader.setMat4("model", model);
+			plane->Draw(shader);
+			//landscape->Draw(shader);
+			//model = glm::translate(model, glm::vec3(0.0, 5.0, 0.0));
+			//shader.setMat4("model", model);
+			//plane->Draw(shader);
+		}
+		else if(bodies[i]->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE){
+			renderSphere(bodies[i], i);
+			shader.setMat4("model", model);
+			sphere->Draw(shader);
+		}
+		else{
+			model = glm::mat4();
+			btTransform t;
+			bodies[i]->getMotionState()->getWorldTransform(t);
+			float mat[16];
+			t.getOpenGLMatrix(mat);
+			model = glm::make_mat4(mat);
+			shader.setMat4("model", model);
+			landscape->Draw(shader);
+		}
+	}
+	*/
 }
 
 void setUpSkyBox() {
@@ -160,7 +169,15 @@ void setUpDepthMap() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void renderDepth(Shader simpleDepthShader) {
+void renderTransitionContents(Shader shader) {
+	model = glm::mat4();
+	model = glm::scale(model, glm::vec3(5.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	img->Draw(shader);
+}
+
+void renderDepth(Shader simpleDepthShader, int flag) {
 	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
 	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane,
 			far_plane);
@@ -176,20 +193,25 @@ void renderDepth(Shader simpleDepthShader) {
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear (GL_DEPTH_BUFFER_BIT);
-	renderSceneContents(simpleDepthShader);
+
+	if(flag == 0)
+		renderTransitionContents(simpleDepthShader);
+	else if(flag == 1)
+		renderSceneContents(simpleDepthShader);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	// reset viewport
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void renderScene(Shader shader) {
+void renderScene(Shader shader, int flag) {
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shader.use();
 
 	projection = glm::perspective(camera.Zoom,
-			(float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
+			(float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 1000.0f);
 	view = camera.GetViewMatrix();
 	shader.setMat4("projection", projection);
 	shader.setMat4("view", view);
@@ -212,17 +234,92 @@ void renderScene(Shader shader) {
 	//Dir Light
 	glActiveTexture (GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
-
-	renderSceneContents(shader);
+	if(flag == 0)
+		renderTransitionContents(shader);
+	else if(flag == 1)
+		renderSceneContents(shader);
 }
 
 void loadModels() {
-	cyborg = new Model("cyborg/cyborg.obj");
+//	cyborg = new Model("cyborg/cyborg.obj");
+	raven = new Model("cyborg/bird.obj");
 	planeScene = new Model("cyborg/test_scene.obj");
 	sphere = new Model("cyborg/sphere.obj");
 	plane = new Model("cyborg/plane.obj");
 	landscape = new Model("cyborg/landscape.obj");
 	box = new Model("cyborg/box.obj");
 	backFrame = new Model("cyborg/frame.obj");
+	animation = new Model("cyborg/animation_test.dae");
+	landscape_wall = new Model("cyborg/landscape_wall.obj");
+}
+
+void cleanModels() {
+	//delete cyborg;
+	delete raven;
+	delete planeScene;
+	delete sphere;
+	delete plane;
+	delete landscape;
+	delete box;
+	delete backFrame;
+	delete animation;
+	delete landscape_wall;
+}
+
+void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader, string image, float duration){
+	camera.Position = glm::vec3(0.0f, 5.0f, 0.0f);
+	camera.Pitch = -90.0f;
+	camera.updateCameraVectors();
+	cameraMove = false;
+	cameraMouseMove = false;
+	try{
+		delete img;
+	}
+	catch (const std::exception& e) {
+		std::cout << e.what() << std::endl;
+	}
+	img = new Model(image.c_str());
+	float transition = 0.0f;
+	while (!glfwWindowShouldClose(window->window)) {
+		glfwWaitEvents();
+		// per-frame time logic
+		// --------------------
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		stepFrame = stepFrame + deltaTime;
+		// input
+		// -----
+		//processInput(window->window);
+		if(stepFrame < duration / 2.0f){
+			transition = 2 * stepFrame/ duration;
+		}
+		else{
+			transition = 1 - (2 * stepFrame/ duration) + 1;
+		}
+		shader.setFloat("transition", transition);
+		if(stepFrame > duration){
+			stepFrame = 0.0f;
+			break;
+		}
+
+		// render
+		// ------
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		// 1. render depth of scene to texture (from light's perspective)
+		// --------------------------------------------------------------
+		renderDepth(simpleDepthShader, 0);
+		renderScene(shader, 0);
+		//renderSkyBox(skyboxShader);
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
+		glfwSwapBuffers(window->window);
+
+	}
+	shader.setFloat("transition", 1.0f);
+	cameraMouseMove = true;
 }
 

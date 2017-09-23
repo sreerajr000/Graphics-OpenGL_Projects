@@ -2,12 +2,16 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="int" key="selection"/>
+		<item value="move" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="move"/>
+			<item value="charac"/>
+			<item value="speed"/>
+			<item value="bool anim"/>
 			<item value="long"/>
 		</list>
 		<list key="replacehistory">
@@ -17,8 +21,8 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="296" key="DIALOG_WIDTH"/>
 		<item value="1|Apple Garamond|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="439" key="DIALOG_HEIGHT"/>
-		<item value="655" key="DIALOG_X_ORIGIN"/>
-		<item value="0" key="DIALOG_Y_ORIGIN"/>
+		<item value="411" key="DIALOG_HEIGHT"/>
+		<item value="1057" key="DIALOG_X_ORIGIN"/>
+		<item value="4" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

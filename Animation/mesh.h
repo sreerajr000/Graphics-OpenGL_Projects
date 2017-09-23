@@ -36,28 +36,58 @@ struct Texture {
 	aiString path;
 };
 
+struct Animation {
+	glm::vec3 mPos;
+	glm::quat mRot;
+	glm::vec3 mScale;
+	double mTime;
+};
+
 class Mesh {
 public:
 	/*  Mesh Data  */
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	vector<Texture> textures;
+	vector<Animation> animations;
 	unsigned int VAO;
-
+	unsigned int index;
+	double currentTime = 0;
 	/*  Functions  */
 	// constructor
 	Mesh(vector<Vertex> vertices, vector<unsigned int> indices,
-			vector<Texture> textures) {
+			vector<Texture> textures, vector<Animation> animations) {
 		this->vertices = vertices;
 		this->indices = indices;
 		this->textures = textures;
-
+		this->animations = animations;
 		// now that we have all the required data, set the vertex buffers and its attribute pointers.
 		setupMesh();
 	}
 
 	// render the mesh
-	void Draw(Shader shader) {
+	void Draw(Shader shader, glm::mat4 modelMatrix) {
+		glm::mat4 tmp;
+		if(animations.size() > 0){
+			glm::mat4 S = glm::scale(glm::mat4(1), animations[index].mScale);
+			glm::mat4 R = glm::mat4_cast(animations[index].mRot);
+			glm::mat4 T = glm::translate(glm::mat4(1), animations[index].mPos);
+
+			tmp = modelMatrix * model * T * R * S;
+
+			shader.setMat4("model", tmp);
+			currentTime += deltaTime;
+			if(animations[index].mTime < currentTime)
+				index++;
+			if(index == animations.size()) {
+				index = 0;
+				currentTime = 0;
+			}
+		}
+		else{
+			tmp = model * modelMatrix;
+			shader.setMat4("model", tmp);
+		}
 		// bind appropriate textures
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;

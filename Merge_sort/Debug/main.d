@@ -117,7 +117,6 @@
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/texture_indirect_functions.h \
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/surface_indirect_functions.h \
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/device_launch_parameters.h \
-    ../util.h \
     /usr/include/c++/5/iostream \
     /usr/include/c++/5/ostream \
     /usr/include/c++/5/ios \
@@ -204,73 +203,6 @@
     /usr/include/c++/5/bits/ostream.tcc \
     /usr/include/c++/5/istream \
     /usr/include/c++/5/bits/istream.tcc \
-    /usr/include/c++/5/random \
-    /usr/include/c++/5/limits \
-    /usr/include/c++/5/bits/random.h \
-    /usr/include/c++/5/vector \
-    /usr/include/c++/5/bits/stl_construct.h \
-    /usr/include/c++/5/bits/stl_uninitialized.h \
-    /usr/include/c++/5/bits/stl_vector.h \
-    /usr/include/c++/5/bits/stl_bvector.h \
-    /usr/include/c++/5/bits/vector.tcc \
-    /usr/include/c++/5/bits/uniform_int_dist.h \
-    /usr/include/x86_64-linux-gnu/c++/5/bits/opt_random.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/x86intrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/ia32intrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/mmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/xmmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/mm_malloc.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/emmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/pmmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/tmmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/ammintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/smmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/popcntintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/wmmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/immintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avxintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx2intrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512fintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512erintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512pfintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512cdintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512vlintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512bwintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512dqintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512vlbwintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512vldqintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512ifmaintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512ifmavlintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512vbmiintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/avx512vbmivlintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/shaintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/lzcntintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/bmiintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/bmi2intrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/fmaintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/f16cintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/rtmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/xtestintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/mm3dnow.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/prfchwintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/fma4intrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/xopintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/lwpintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/tbmintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/rdseedintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/fxsrintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/xsaveintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/xsaveoptintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/adxintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/clwbintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/pcommitintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/clflushoptintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/xsavesintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/xsavecintrin.h \
-    /usr/lib/gcc/x86_64-linux-gnu/5/include/mwaitxintrin.h \
-    /usr/include/c++/5/bits/random.tcc \
-    /usr/include/c++/5/numeric \
-    /usr/include/c++/5/bits/stl_numeric.h \
     /usr/local/cuda-8.0/samples/common/inc/helper_cuda.h \
     /usr/local/cuda-8.0/samples/common/inc/helper_string.h \
     /usr/include/c++/5/fstream \
@@ -280,12 +212,4 @@
     /usr/include/c++/5/bits/fstream.tcc \
     /usr/include/strings.h \
     /usr/include/x86_64-linux-gnu/sys/time.h \
-    /usr/include/c++/5/climits \
-    /usr/include/c++/5/algorithm \
-    /usr/include/c++/5/utility \
-    /usr/include/c++/5/bits/stl_relops.h \
-    /usr/include/c++/5/bits/stl_algo.h \
-    /usr/include/c++/5/bits/algorithmfwd.h \
-    /usr/include/c++/5/bits/stl_heap.h \
-    /usr/include/c++/5/bits/stl_tempbuf.h \
-    ../help.h
+    ../util.h

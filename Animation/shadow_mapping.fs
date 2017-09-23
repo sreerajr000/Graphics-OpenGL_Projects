@@ -34,11 +34,12 @@ uniform vec3 viewPos;
 uniform Material material;
 vec3 lightPos = light.position;
 uniform vec3 cameraPos;
+uniform float transition;
 
 uniform float far_plane;
 
 
-float fogMinDistance = 15.0;
+float fogMinDistance = 25.0;
 // array of offset direction for sampling
 vec3 gridSamplingDisk[20] = vec3[]
 (
@@ -158,9 +159,9 @@ void main()
     vec3 lighting = (ambient + vec3(1.0 - shadow) * (diffuse + specular));
 	float distance = length(fs_in.FragPos.xyz - cameraPos); 
     
-    FragColor = vec4(lighting, 1.0);
+    FragColor = vec4(lighting, texture(material.diffuse, fs_in.TexCoords).a);
     
-	FragColor = mix(vec4(0.6f, 0.6f, 0.6f, 1.0f), FragColor, min(fogMinDistance / distance, 1.0f));  
+	FragColor = vec4(transition) * mix(vec4(0.6f, 0.6f, 0.6f, 1.0f), FragColor, min(fogMinDistance / distance, 1.0f));  
 	
     //FragColor = vec4(diffuse, 1.0);
 }

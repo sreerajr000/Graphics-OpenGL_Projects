@@ -1,0 +1,21 @@
+/*
+ * window.h
+ *
+ *  Created on: 14-Aug-2017
+ *      Author: sree
+ */
+
+#pragma once
+
+#include <iostream>
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+class Window {
+public:
+	GLFWwindow *window;
+	Window(GLchar*);
+	bool createWindow();
+};
+

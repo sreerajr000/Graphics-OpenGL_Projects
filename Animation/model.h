@@ -29,6 +29,7 @@ public:
 	/*  Model Data */
 	vector<Texture> textures_loaded; // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 	vector<Mesh> meshes;
+	glm::mat4 modelMatrix = glm::mat4();
 	string directory;
 	bool gammaCorrection;
 
@@ -42,7 +43,7 @@ public:
 	// draws the model, and thus all its meshes
 	void Draw(Shader shader) {
 		for (unsigned int i = 0; i < meshes.size(); i++)
-			meshes[i].Draw(shader);
+			meshes[i].Draw(shader, modelMatrix);
 	}
 
 	btRigidBody* createRigidBodyFromMesh(float mass, float x, float y,
@@ -50,6 +51,25 @@ public:
 		btTransform t;
 		t.setIdentity();
 		t.setOrigin(btVector3(x, y, z));
+
+		btTriangleMesh *triMesh = new btTriangleMesh();
+		std::cout << meshes[0].indices.size() << std::endl;
+		for(int i = 0; i < meshes.size(); i+= 3){
+			vector<unsigned int>indices = meshes[i].indices;
+			vector<Vertex> vertices = meshes[i].vertices;
+			glm::vec3 p0 = vertices[indices[i]].Position;
+			glm::vec3 p1 = vertices[indices[i+1]].Position;
+			glm::vec3 p2 = vertices[indices[i+2]].Position;
+
+			btVector3 v0(p0.x, p0.y, p0.z);
+			btVector3 v1(p1.x, p1.y, p1.z);
+			btVector3 v2(p2.x, p2.y, p2.z);
+
+			triMesh->addTriangle(v0, v1, v2);
+		}
+
+		//btCollisionShape *shape = new btBvhTriangleMeshShape(triMesh, true);
+
 		btConvexHullShape *shape = new btConvexHullShape();
 		for (int i = 0; i < meshes.size(); i++) {
 			vector<Vertex> vertices = meshes[i].vertices;
@@ -103,6 +123,7 @@ private:
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			meshes.push_back(processMesh(mesh, scene));
 		}
+
 		// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
 			processNode(node->mChildren[i], scene);
@@ -115,6 +136,7 @@ private:
 		vector<Vertex> vertices;
 		vector<unsigned int> indices;
 		vector<Texture> textures;
+		vector<Animation> animations;
 
 		// Walk through each of the mesh's vertices
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -153,7 +175,7 @@ private:
 			vertex.Bitangent = vector;
 			vertices.push_back(vertex);
 		}
-		// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+		// now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 			aiFace face = mesh->mFaces[i];
 			// retrieve all indices of the face and store them in the indices vector
@@ -187,8 +209,38 @@ private:
 				aiTextureType_AMBIENT, "texture_height");
 		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
+
+		//Process Animation Data
+		if(scene->mNumAnimations > 0){
+
+			std::cout << "mNumAnimations : " << scene->mNumAnimations << std::endl;
+			for(unsigned int i = 0; i < scene->mNumAnimations; i++){
+				std::cout << "mNumChannels " << i << " : " << scene->mAnimations[i]->mNumChannels << std::endl;
+				for(unsigned int j = 0; j < scene->mAnimations[i]->mNumChannels; j++)
+					std::cout << scene->mAnimations[i]->mChannels[j]->mNodeName.C_Str() << std::endl;
+			}
+			aiNodeAnim *animNode;
+			for(unsigned int i = 0; i < scene->mAnimations[0]->mNumChannels; i++){
+				if(scene->mAnimations[0]->mChannels[i]->mNodeName == mesh->mName)
+					 animNode = scene->mAnimations[0]->mChannels[i];
+			}
+
+			for(unsigned int i = 0; i < animNode->mNumPositionKeys; i++){
+				Animation tmp;
+				aiVector3D mPos = animNode->mPositionKeys[i].mValue;
+				aiQuaternion mRot = animNode->mRotationKeys[i].mValue;
+				aiVector3D mScale = animNode->mScalingKeys[i].mValue;
+				double mTime = animNode->mPositionKeys[i].mTime;
+				tmp.mTime = mTime;
+				tmp.mPos = glm::vec3(mPos.x, mPos.y, mPos.z);
+				tmp.mRot = glm::quat(mRot.x, mRot.y, mRot.z, mRot.w);
+				tmp.mScale = glm::vec3(mScale.x, mScale.y, mScale.z);
+				animations.push_back(tmp);
+			}
+		}
+
 		// return a mesh object created from the extracted mesh data
-		return Mesh(vertices, indices, textures);
+		return Mesh(vertices, indices, textures, animations);
 	}
 
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
@@ -256,7 +308,7 @@ unsigned int TextureFromFile(const char *path, const string &directory,
 
 		stbi_image_free(data);
 	} else {
-		std::cout << "Texture failed to load at path: " << path << std::endl;
+		std::cout << "Texture failed to load at path: " << filename << std::endl;
 		stbi_image_free(data);
 	}
 

@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 #include <vector>
 
@@ -65,8 +66,9 @@ public:
 	}
 
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-	void ProcessKeyboard(Camera_Movement direction, float deltaTime) {
+	void ProcessKeyboard(Camera_Movement direction, float deltaTime, float radius) {
 		float velocity = MovementSpeed * deltaTime;
+		glm::vec3 prevPosition = Position;
 		if (direction == FORWARD)
 			Position += Front * velocity;
 		if (direction == BACKWARD)
@@ -75,6 +77,10 @@ public:
 			Position -= Right * velocity;
 		if (direction == RIGHT)
 			Position += Right * velocity;
+		//std::cout << glm::distance(glm::vec3(0), Position)  << std::endl;
+		if(glm::distance(glm::vec3(0), Position) > radius)
+			Position = prevPosition;
+		Position.y = cameraYHeight;
 	}
 
 	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -108,7 +114,6 @@ public:
 			Zoom = 45.0f;
 	}
 
-private:
 	// Calculates the front vector from the Camera's (updated) Eular Angles
 	void updateCameraVectors() {
 		// Calculate the new Front vector

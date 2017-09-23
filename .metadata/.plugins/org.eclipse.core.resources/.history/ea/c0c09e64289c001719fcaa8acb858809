@@ -1,0 +1,41 @@
+/*
+ * terrain.h
+ *
+ *  Created on: 18-Sep-2017
+ *      Author: sree
+ */
+
+#ifndef TERRAIN_H_
+#define TERRAIN_H_
+
+class Terrain {
+public:
+	Model* terrain[3][3];
+	void update(){
+
+	}
+	Terrain(){
+		glm::vec3 playerPos = camera.Position;
+		int i = playerPos.x / 10.0f;
+		int j = playerPos.z / 10.0f;
+		stringstream ss;
+		ss << "terrain_";
+		ss << i << "_" << j << ".obj";
+		std::cout << ss.str() << std::endl;
+	}
+	void draw(Shader shader){
+		for(unsigned int i = 0; i < 3; i++){
+			for(unsigned int j = 0; j < 3; i++){
+				//Draw each cells
+				model = glm::mat4();
+				shader.setMat4("model", model);
+				terrain[i][j]->Draw(shader);
+			}
+		}
+	}
+};
+
+
+
+
+#endif /* TERRAIN_H_ */

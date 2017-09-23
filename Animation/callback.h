@@ -5,43 +5,55 @@ void characterMoveForward();
 void characterMoveBackward();
 void move();
 
-// settings
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 720;
-float lastX = (float) SCR_WIDTH / 2.0;
-float lastY = (float) SCR_HEIGHT / 2.0;
+
+float radius = 100.0f;
 bool firstMouse = true;
 
 bool moveUp = false, moveDown = false, moveLeft = false, moveRight = false;
+bool moveForward = false, moveBackward = false;
 bool ml = true;
-// timing
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	/*	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-	 throwSphere();
-	 }*/
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
-	/*if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		moveUp = true;
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		moveDown = true;
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		moveLeft = true;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		moveRight = true;*/
+//	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
+//		throwSphere();
+//	}
+	if(cameraMove){
+		camera.ProcessKeyboard(FORWARD, deltaTime * 2, radius);
+//		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+//			camera.ProcessKeyboard(FORWARD, deltaTime * 2, radius);
+//		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+//			camera.ProcessKeyboard(BACKWARD, deltaTime * 2, radius);
+//		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+//			camera.ProcessKeyboard(LEFT, deltaTime * 2, radius);
+//		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+//			camera.ProcessKeyboard(RIGHT, deltaTime * 2, radius);
+	}
+	else{
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			camera.ProcessKeyboard(FORWARD, deltaTime * 2, radius);
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			camera.ProcessKeyboard(BACKWARD, deltaTime * 2, radius);
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			camera.ProcessKeyboard(LEFT, deltaTime * 2, radius);
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			camera.ProcessKeyboard(RIGHT, deltaTime * 2, radius);
+		}
+//	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+//		moveForward = true;
+//		characterMoveForward();
+//	}
+//	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+//		moveBackward = true;
+//		characterMoveBackward();
+//	}
+//	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+//		moveLeft = true;
+//	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+//		moveRight = true;
 
 }
 
@@ -67,8 +79,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 	lastX = xpos;
 	lastY = ypos;
-
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	if(cameraMouseMove)
+		camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 
@@ -86,7 +98,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		moveDown = true;
 	}
 	if(key == GLFW_KEY_DOWN && action == GLFW_RELEASE){
-		speed = 1;
+		moveDown = false;
 	}
 }
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -162,32 +174,3 @@ unsigned int loadCubemap(vector<std::string> faces) {
 	return textureID;
 }
 
-/*
- * function keyPressed() {
-  if (keyCode === LEFT_ARROW) {
-    currentBlk.x--;
-    currentBlk.y--;
-    if (currentBlk.checkCollision()) currentBlk.x++;
-    else moveSide();
-
-  } else if (keyCode === RIGHT_ARROW) {
-    currentBlk.x++;
-    currentBlk.y--;
-    if (currentBlk.checkCollision()) currentBlk.x--;
-    else moveSide();
-
-  } else if (keyCode === DOWN_ARROW) {
-    speed = 10;
-    draw();
-    return false;
-  } else if (keyCode === UP_ARROW) {
-
-    currentBlk.rotateBlk();
-    if (currentBlk.checkCollision()) currentBlk.urotateBlk();
-    return false;
-  }
-}
- *
- *
- *
- */

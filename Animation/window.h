@@ -14,7 +14,9 @@
 
 class Window {
 public:
-	GLFWwindow *window;
+	GLint width, height;
+	GLFWwindow* window;
+	Window(GLchar*);
 	Window(GLint, GLint, GLchar*);
 	bool createWindow();
 };

@@ -7,6 +7,20 @@
 
 #include "window.h"
 
+Window::Window(GLchar* TITLE) {
+	glfwInit();
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	this->width = mode->width;
+	this->height = mode->height;
+	window = glfwCreateWindow(this->width, this->height, TITLE, glfwGetPrimaryMonitor(), nullptr);
+}
+
 Window::Window(GLint WIDTH, GLint HEIGHT, GLchar* TITLE) {
 	glfwInit();
 
@@ -16,7 +30,7 @@ Window::Window(GLint WIDTH, GLint HEIGHT, GLchar* TITLE) {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, nullptr, nullptr);
+	window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, glfwGetPrimaryMonitor(), nullptr);
 }
 
 bool Window::createWindow() {
