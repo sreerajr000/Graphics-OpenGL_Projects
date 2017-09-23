@@ -13,7 +13,7 @@ using namespace irrklang;
 ISoundEngine *SoundEngine = createIrrKlangDevice();
 
 enum STAGE{
-	STAGE_1, STAGE_2
+	MENU, STAGE_1, TETRIS, STAGE_2
 }stage;
 
 
@@ -54,7 +54,7 @@ int main() {
 	srand(time(NULL));
 	//Create Window
 
-	Window window("Game");
+	Window window((GLchar*)"Game");
 	if (!window.createWindow()) {
 		return EXIT_FAILURE;
 	}
@@ -64,9 +64,8 @@ int main() {
 	lastY = (float) SCR_HEIGHT / 2.0;
 
 	stage = STAGE_1;
+	irrklang::ISound* menu_theme = SoundEngine->play2D("sound/menu_theme.wav", true, false, true);
 
-	SoundEngine->play2D("sound/wind.wav", GL_TRUE);
-	SoundEngine->play2D("sound/theme.wav", GL_TRUE);
 	glfwSetFramebufferSizeCallback(window.window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window.window, mouse_callback);
 	glfwSetKeyCallback(window.window, key_callback);
@@ -118,10 +117,20 @@ int main() {
 	block = new Block();
 
 	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/img.obj", 30.0f);
+
+
 	camera.Position = glm::vec3(0.0f, cameraYHeight, 90.0f);
 	camera.Pitch = 0.0f;
 	camera.updateCameraVectors();
 	cameraMove = true;
+
+
+	irrklang::ISound* wind_north = SoundEngine->play2D("sound/wind.wav", true, false, true);
+	//menu_theme->stop();
+	std::thread fadeOutMenuTheme(fadeOutMusic, menu_theme, 3.0f);
+	irrklang::ISound* north_theme = SoundEngine->play2D("sound/theme_north.wav", true, false, true);
+
+
 	while (!glfwWindowShouldClose(window.window)) {
 		glfwWaitEvents();
 		// per-frame time logic
@@ -144,12 +153,12 @@ int main() {
 
 		// 1. render depth of scene to texture (from light's perspective)
 		// --------------------------------------------------------------
-		renderDepth(simpleDepthShader, 1);
+		renderDepth(simpleDepthShader, stage);
 		//renderPointDepth(pointDepthShader);
 
 		// 2. render scene as normal using the generated depth/shadow map
 		// --------------------------------------------------------------
-		renderScene(shader,1);
+		renderScene(shader, stage);
 		renderSkyBox(skyboxShader);
 
 		game(&window, shader, simpleDepthShader, skyboxShader);
@@ -158,11 +167,12 @@ int main() {
 		glfwSwapBuffers(window.window);
 
 	}
+	fadeOutMenuTheme.join();
 	cleanModels();
 	// optional: de-allocate all resources once they've outlived their purpose:
 	// ------------------------------------------------------------------------
 	//cleanPhysics();
-
+	SoundEngine->drop();
 	glfwTerminate();
 	return 0;
 }

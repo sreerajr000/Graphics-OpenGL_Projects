@@ -10,7 +10,7 @@ Play Cut Scenes (Play Video)
 Basic Tetris 						✔
 Tetris on Wall
 Wall Model
-Sound Effects
+Sound Effects						✔
 Snow Fall(Probably Particle System)	
 ControlFrameRate of Just Dropping	✔
 Different Types of Boxes
@@ -21,15 +21,12 @@ Timer
 
 **Game**
 TRex with Dragon
-Import Animation
+Import Animation					✔
 Collision detection
 Fire Effect
-Alpha Transparency
+Alpha Transparency					✔
 
 **World**
-Terrain Loading (Manual)
-Bigger World
-Trees
-Alpha Transp Grass
+Terrain Loading (Manual)			✔
 Path and Boundaries
 Map

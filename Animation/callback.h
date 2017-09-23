@@ -18,6 +18,7 @@ bool ml = true;
 void processInput(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
 //	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
 //		throwSphere();
 //	}

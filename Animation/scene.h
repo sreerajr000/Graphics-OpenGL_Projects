@@ -1,6 +1,6 @@
 #pragma once
-void renderScene(Shader);
-void renderDepth(Shader);
+void renderScene(Shader, int);
+void renderDepth(Shader, int);
 void renderSkyBox(Shader);
 unsigned int depthMap;
 unsigned int skyboxVAO, skyboxVBO;
@@ -23,7 +23,7 @@ unsigned int planeVAO;
 #pragma once
 // renders the 3D scene
 // --------------------
-void renderSceneContents(const Shader &shader) {
+void renderStage1SceneContents(const Shader &shader) {
 	//Raven
 	model = glm::mat4();
 
@@ -194,10 +194,12 @@ void renderDepth(Shader simpleDepthShader, int flag) {
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear (GL_DEPTH_BUFFER_BIT);
 
-	if(flag == 0)
+	if(flag == MENU)
 		renderTransitionContents(simpleDepthShader);
-	else if(flag == 1)
-		renderSceneContents(simpleDepthShader);
+	else if(flag == STAGE_1)
+		renderStage1SceneContents(simpleDepthShader);
+	else if(flag == TETRIS)
+		renderTetrisSceneContents(simpleDepthShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	// reset viewport
@@ -234,10 +236,12 @@ void renderScene(Shader shader, int flag) {
 	//Dir Light
 	glActiveTexture (GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
-	if(flag == 0)
+	if(flag == MENU)
 		renderTransitionContents(shader);
-	else if(flag == 1)
-		renderSceneContents(shader);
+	else if(flag == STAGE_1)
+		renderStage1SceneContents(shader);
+	else if(flag == TETRIS)
+		renderTetrisSceneContents(shader);
 }
 
 void loadModels() {
@@ -311,8 +315,8 @@ void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShad
 
 		// 1. render depth of scene to texture (from light's perspective)
 		// --------------------------------------------------------------
-		renderDepth(simpleDepthShader, 0);
-		renderScene(shader, 0);
+		renderDepth(simpleDepthShader, MENU);
+		renderScene(shader, MENU);
 		//renderSkyBox(skyboxShader);
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------

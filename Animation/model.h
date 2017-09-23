@@ -54,7 +54,7 @@ public:
 
 		btTriangleMesh *triMesh = new btTriangleMesh();
 		std::cout << meshes[0].indices.size() << std::endl;
-		for(int i = 0; i < meshes.size(); i+= 3){
+		for(unsigned int i = 0; i < meshes.size(); i+= 3){
 			vector<unsigned int>indices = meshes[i].indices;
 			vector<Vertex> vertices = meshes[i].vertices;
 			glm::vec3 p0 = vertices[indices[i]].Position;
@@ -71,9 +71,9 @@ public:
 		//btCollisionShape *shape = new btBvhTriangleMeshShape(triMesh, true);
 
 		btConvexHullShape *shape = new btConvexHullShape();
-		for (int i = 0; i < meshes.size(); i++) {
+		for (unsigned int i = 0; i < meshes.size(); i++) {
 			vector<Vertex> vertices = meshes[i].vertices;
-			for (int j = 0; j < vertices.size(); j++) {
+			for (unsigned int j = 0; j < vertices.size(); j++) {
 				shape->addPoint(
 						btVector3(vertices[j].Position.x,
 								vertices[j].Position.y,
@@ -101,7 +101,7 @@ private:
 				aiProcess_Triangulate | aiProcess_FlipUVs
 						| aiProcess_CalcTangentSpace);
 		// check for errors
-		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE
+		if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
 				|| !scene->mRootNode) // if is Not Zero
 				{
 			cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;

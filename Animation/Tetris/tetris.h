@@ -104,62 +104,6 @@ void renderTetrisSceneContents(const Shader &shader) {
 
 }
 
-void renderTetrisDepth(Shader simpleDepthShader) {
-	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane,
-			far_plane);
-	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-	lightView = glm::lookAt(lightPos + camera.Position, camera.Position,
-			glm::vec3(0.0, 1.0, 0.0));
-	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), camera.Up);
-	lightSpaceMatrix = lightProjection * lightView;
-	// render scene from light's point of view
-	simpleDepthShader.use();
-	simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear (GL_DEPTH_BUFFER_BIT);
-	renderTetrisSceneContents(simpleDepthShader);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	// reset viewport
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void renderTetrisScene(Shader shader) {
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	shader.use();
-
-	projection = glm::perspective(camera.Zoom,
-			(float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 1000.0f);
-	view = camera.GetViewMatrix();
-	shader.setMat4("projection", projection);
-	shader.setMat4("view", view);
-	// set light uniforms
-	shader.setVec3("viewPos", camera.Position);
-	shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-	shader.setVec3("light.position", lightPos);
-	shader.setVec3("lightPos", lightPos);
-	shader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	shader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
-	shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-	shader.setFloat("material.shininess", 32.0f);
-	shader.setFloat("far_plane", far_plane);
-	shader.setVec3("cameraPos", camera.Position);
-
-	//Point Light
-	//glActiveTexture(GL_TEXTURE3);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
-
-	//Dir Light
-	glActiveTexture (GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-
-	renderTetrisSceneContents(shader);
-}
-
 void gameStep(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader) {
 	block->y--;
 	SoundEngine->play2D("sound/drop_beep.wav");
@@ -183,8 +127,8 @@ void gameStep(Window *window, Shader shader, Shader simpleDepthShader, Shader sk
 
 			box->modelMatrix = glm::rotate(box->modelMatrix, 2 * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
 
-			renderTetrisDepth(simpleDepthShader);
-			renderTetrisScene(shader);
+			renderDepth(simpleDepthShader, TETRIS);
+			renderScene(shader, TETRIS);
 			renderSkyBox(skyboxShader);
 			glfwSwapBuffers(window->window);
 		}
@@ -225,8 +169,8 @@ void runTetris(Window *window, Shader shader, Shader simpleDepthShader, Shader s
 			gameStep(window, shader, simpleDepthShader, skyboxShader);
 		}
 
-		renderTetrisDepth(simpleDepthShader);
-		renderTetrisScene(shader);
+		renderDepth(simpleDepthShader, TETRIS);
+		renderScene(shader, TETRIS);
 		renderSkyBox(skyboxShader);
 		glfwSwapBuffers(window->window);
 

@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lglfw -lGL -lGLEW -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter -lBulletFileLoader -lIrrKlang
+LIBS := -lglfw -lpthread -lGL -lGLEW -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter -lBulletFileLoader -lIrrKlang
 

@@ -17,6 +17,7 @@ void game(Window *window, Shader shader, Shader simpleDepthShader, Shader skybox
 			tetrisStart = true;
 			cameraMove = false;
 			//put some transition here
+			stage = TETRIS;
 			runTetris(window, shader, simpleDepthShader, skyboxShader);
 		}
 		break;
@@ -26,5 +27,12 @@ void game(Window *window, Shader shader, Shader simpleDepthShader, Shader skybox
 }
 
 
+void fadeOutMusic(irrklang::ISound* sound, float duration){
+	while(1){
+		sound->setVolume(1.0f - stepFrame / duration);
+		if(sound->getVolume() < 0)
+			break;
+	}
+}
 
 #endif /* GAME_MAIN_H_ */
