@@ -13,7 +13,7 @@ using namespace irrklang;
 ISoundEngine *SoundEngine = createIrrKlangDevice();
 
 enum STAGE{
-	MENU, STAGE_1, TETRIS, STAGE_2
+	LOGO, MENU, STAGE_1, TETRIS, STAGE_2
 }stage;
 
 
@@ -28,7 +28,8 @@ float deltaTime = 0.0f;
 Camera camera(glm::vec3(0.0f, cameraYHeight, 90.0f));
 btRigidBody *cameraBody;
 #include "model.h"
-Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame, *animation, *raven, *landscape_wall, *img;
+Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame, *animation, *raven, *landscape_wall, *img, *throne,
+	*selectionBox;
 bool tetrisStart = false;
 bool cameraMove = true;
 bool cameraMouseMove = true;
@@ -116,7 +117,16 @@ int main() {
 	// -----------
 	block = new Block();
 
-	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/img.obj", 30.0f);
+	/*renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
+
+	while(true){
+		renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/start.obj", 5.0f);
+		if(glfwGetKey(window.window, GLFW_KEY_SPACE) == GLFW_PRESS){
+			break;
+		}
+	}*/
+
+	displayMenu(&window, shader, simpleDepthShader, skyboxShader);
 
 
 	camera.Position = glm::vec3(0.0f, cameraYHeight, 90.0f);

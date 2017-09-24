@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 OBJ_SRCS += \
+../cyborg/IronThrone.obj \
 ../cyborg/bird.obj \
 ../cyborg/box.obj \
 ../cyborg/crow.obj \
@@ -14,9 +15,13 @@ OBJ_SRCS += \
 ../cyborg/landscape.obj \
 ../cyborg/landscape_grass.obj \
 ../cyborg/landscape_wall.obj \
+../cyborg/logo.obj \
+../cyborg/menu.obj \
 ../cyborg/plane.obj \
 ../cyborg/raven.obj \
+../cyborg/selection_box.obj \
 ../cyborg/sphere.obj \
+../cyborg/start.obj \
 ../cyborg/test_scene.obj 
 
 

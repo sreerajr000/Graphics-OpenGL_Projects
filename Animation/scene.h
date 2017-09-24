@@ -23,6 +23,26 @@ unsigned int planeVAO;
 #pragma once
 // renders the 3D scene
 // --------------------
+
+void renderMenuContents(const Shader &shader) {
+	shader.setFloat("transition", 5.0f);
+	model = glm::mat4();
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(5.0f));
+	shader.setMat4("model", model);
+	img->Draw(shader);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.01f, 0.0f));
+	shader.setMat4("model", model);
+	selectionBox->Draw(shader);
+
+	shader.setFloat("transition", 1.25f);
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(1.1f, 2.0f, 0.0f));
+	model = glm::rotate(model, -GLfloat(glfwGetTime() * 0.9f), glm::vec3(0.0f, 0.0f, 1.0f));
+	shader.setMat4("model", model);
+	throne->Draw(shader);
+}
 void renderStage1SceneContents(const Shader &shader) {
 	//Raven
 	model = glm::mat4();
@@ -194,8 +214,10 @@ void renderDepth(Shader simpleDepthShader, int flag) {
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear (GL_DEPTH_BUFFER_BIT);
 
-	if(flag == MENU)
+	if(flag == LOGO)
 		renderTransitionContents(simpleDepthShader);
+	else if (flag == MENU)
+		renderMenuContents(simpleDepthShader);
 	else if(flag == STAGE_1)
 		renderStage1SceneContents(simpleDepthShader);
 	else if(flag == TETRIS)
@@ -236,8 +258,10 @@ void renderScene(Shader shader, int flag) {
 	//Dir Light
 	glActiveTexture (GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
-	if(flag == MENU)
+	if(flag == LOGO)
 		renderTransitionContents(shader);
+	else if(flag == MENU)
+		renderMenuContents(shader);
 	else if(flag == STAGE_1)
 		renderStage1SceneContents(shader);
 	else if(flag == TETRIS)
@@ -255,6 +279,8 @@ void loadModels() {
 	backFrame = new Model("cyborg/frame.obj");
 	animation = new Model("cyborg/animation_test.dae");
 	landscape_wall = new Model("cyborg/landscape_wall.obj");
+	throne = new Model("cyborg/IronThrone.obj");
+	selectionBox = new Model("cyborg/selection_box.obj");
 }
 
 void cleanModels() {
@@ -268,6 +294,8 @@ void cleanModels() {
 	delete backFrame;
 	delete animation;
 	delete landscape_wall;
+	delete throne;
+	delete selectionBox;
 }
 
 void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader, string image, float duration){
@@ -312,11 +340,13 @@ void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShad
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+		if(glfwGetKey(window->window, GLFW_KEY_SPACE) == GLFW_PRESS){
+			break;
+		}
 		// 1. render depth of scene to texture (from light's perspective)
 		// --------------------------------------------------------------
-		renderDepth(simpleDepthShader, MENU);
-		renderScene(shader, MENU);
+		renderDepth(simpleDepthShader, LOGO);
+		renderScene(shader, LOGO);
 		//renderSkyBox(skyboxShader);
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------

@@ -1,11 +1,11 @@
-21:39:59 **** Incremental Build of configuration Debug for project Animation ****
+11:53:53 **** Incremental Build of configuration Debug for project Animation ****
 make all 
 Building file: ../main.cpp
 Invoking: GCC C++ Compiler
 g++ -std=c++0x -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
 In file included from ../Tetris/tetris.h:12:0,
                  from ../scene.h:21,
-                 from ../main.cpp:46:
+                 from ../main.cpp:47:
 ../Tetris/block.h: In member function ‘void Block::draw(Shader)’:
 ../Tetris/block.h:38:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
    for(int i = 0; i < blocks[blockid][orient].size(); i++) {
@@ -48,7 +48,7 @@ In file included from ../Tetris/tetris.h:12:0,
     for (int j = 0; j < blk[i].size(); j++) {
                       ^
 In file included from ../scene.h:21:0,
-                 from ../main.cpp:46:
+                 from ../main.cpp:47:
 ../Tetris/tetris.h: In function ‘void drawFrame(Shader)’:
 ../Tetris/tetris.h:17:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
   for(int i = 0; i < frame.size(); i++) {
@@ -64,10 +64,10 @@ In file included from ../scene.h:21:0,
    for(int j = 0; j < frame[i].size(); j++){
                     ^
 ../main.cpp: In function ‘int main()’:
-../main.cpp:124:20: warning: unused variable ‘wind_north’ [-Wunused-variable]
+../main.cpp:138:20: warning: unused variable ‘wind_north’ [-Wunused-variable]
   irrklang::ISound* wind_north = SoundEngine->play2D("sound/wind.wav", true, false, true);
                     ^
-../main.cpp:127:20: warning: unused variable ‘north_theme’ [-Wunused-variable]
+../main.cpp:141:20: warning: unused variable ‘north_theme’ [-Wunused-variable]
   irrklang::ISound* north_theme = SoundEngine->play2D("sound/theme_north.wav", true, false, true);
                     ^
 Finished building: ../main.cpp
@@ -83,5 +83,5 @@ g++ -L/usr/local/lib -o "Animation"  ./main.o ./window.o   -lglfw -lpthread -lGL
 Finished building target: Animation
  
 
-21:40:03 Build Finished (took 3s.887ms)
+11:53:59 Build Finished (took 5s.626ms)
 

@@ -2,7 +2,7 @@ ADD all Projects to Github
 
 
 **Interface**
-Loading Screen
+Loading Screen						✔
 Threading Loading Models
 Play Cut Scenes (Play Video)
 
@@ -28,5 +28,5 @@ Alpha Transparency					✔
 
 **World**
 Terrain Loading (Manual)			✔
-Path and Boundaries
+Path and Boundaries					✔
 Map
