@@ -8,6 +8,7 @@ void move();
 
 float radius = 100.0f;
 bool firstMouse = true;
+bool keys[1024];
 
 bool moveUp = false, moveDown = false, moveLeft = false, moveRight = false;
 bool moveForward = false, moveBackward = false;
@@ -86,6 +87,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if(action == GLFW_PRESS)
+		keys[key] = true;
+	else if(action == GLFW_RELEASE)
+		keys[key] = false;
 	if(key == GLFW_KEY_LEFT && action == GLFW_RELEASE){
 		moveLeft = true;
 	}

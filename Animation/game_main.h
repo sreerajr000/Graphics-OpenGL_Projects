@@ -9,7 +9,7 @@
 #define GAME_MAIN_H_
 
 #include <time.h>
-
+#include <unistd.h>
 void displayMenu(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader){
 	camera.Position = glm::vec3(0.0f, 5.0f, 0.0f);
 	camera.Pitch = -90.0f;
@@ -24,6 +24,7 @@ void displayMenu(Window *window, Shader shader, Shader simpleDepthShader, Shader
 	}
 	img = new Model("cyborg/menu.obj");
 	shader.setFloat("transition", 1.0f);
+	selection = 0;
 	while (!glfwWindowShouldClose(window->window)) {
 		glfwWaitEvents();
 		float currentFrame = glfwGetTime();
@@ -37,7 +38,21 @@ void displayMenu(Window *window, Shader shader, Shader simpleDepthShader, Shader
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if(glfwGetKey(window->window, GLFW_KEY_ENTER) == GLFW_PRESS){
+			SoundEngine->play2D("sound/menu_enter.wav");
 			break;
+		}
+		if(stepFrame > 0.1f){
+			if(glfwGetKey(window->window, GLFW_KEY_DOWN) == GLFW_PRESS){
+				selection = (selection + 1) % 3;
+				SoundEngine->play2D("sound/drop_beep.wav");
+			}
+			if(glfwGetKey(window->window, GLFW_KEY_UP) == GLFW_PRESS){
+				selection--;
+				SoundEngine->play2D("sound/drop_beep.wav");
+				if(selection == -1)
+					selection = 2;
+			}
+			stepFrame = 0.0f;
 		}
 
 		renderDepth(simpleDepthShader, MENU);
@@ -52,13 +67,15 @@ void displayMenu(Window *window, Shader shader, Shader simpleDepthShader, Shader
 void game(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader) {
 	//Check Positions
 	//std::cout << glm::distance(glm::vec3(0), camera.Position) << std::endl;
-	switch(stage){
+	switch(player.data.stage){
 	case STAGE_1:
-		if(glm::distance(glm::vec3(0), camera.Position) < 20.0f){
+		if(glm::distance(glm::vec3(0), camera.Position) < 16.0f){
 			tetrisStart = true;
 			cameraMove = false;
 			//put some transition here
-			stage = TETRIS;
+			player.data.stage = TETRIS;
+			SoundEngine->play2D("sound/menu_enter.wav");
+			setUpSkyBox(tetrisSkybox);
 			runTetris(window, shader, simpleDepthShader, skyboxShader);
 		}
 		break;

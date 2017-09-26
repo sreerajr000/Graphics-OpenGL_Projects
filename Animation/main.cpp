@@ -14,7 +14,7 @@ ISoundEngine *SoundEngine = createIrrKlangDevice();
 
 enum STAGE{
 	LOGO, MENU, STAGE_1, TETRIS, STAGE_2
-}stage;
+};
 
 
 float cameraYHeight = 15.0f;
@@ -24,12 +24,15 @@ int speed = 1;
 float stepFrame = 0.0f;
 float lastFrame = 0.0f;
 float deltaTime = 0.0f;
+int selection;
 // camera
 Camera camera(glm::vec3(0.0f, cameraYHeight, 90.0f));
 btRigidBody *cameraBody;
 #include "model.h"
+#include "player.h"
 Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame, *animation, *raven, *landscape_wall, *img, *throne,
 	*selectionBox;
+Player player;
 bool tetrisStart = false;
 bool cameraMove = true;
 bool cameraMouseMove = true;
@@ -51,6 +54,7 @@ float lastY;
 
 using namespace irrklang;
 
+
 int main() {
 	srand(time(NULL));
 	//Create Window
@@ -64,7 +68,8 @@ int main() {
 	lastX = (float) SCR_WIDTH / 2.0;
 	lastY = (float) SCR_HEIGHT / 2.0;
 
-	stage = STAGE_1;
+	player.data.stage = STAGE_1;
+
 	irrklang::ISound* menu_theme = SoundEngine->play2D("sound/menu_theme.wav", true, false, true);
 
 	glfwSetFramebufferSizeCallback(window.window, framebuffer_size_callback);
@@ -93,7 +98,8 @@ int main() {
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
 
-	setUpSkyBox();
+
+	setUpSkyBox(normalSkybox);
 
 	setUpDepthMap();
 
@@ -117,18 +123,42 @@ int main() {
 	// -----------
 	block = new Block();
 
-	/*renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
+/*	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
 
 	while(true){
 		renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/start.obj", 5.0f);
 		if(glfwGetKey(window.window, GLFW_KEY_SPACE) == GLFW_PRESS){
 			break;
 		}
-	}*/
+	}
 
 	displayMenu(&window, shader, simpleDepthShader, skyboxShader);
 
 
+	switch(selection){
+	case 0:
+		break;
+	case 1:
+		std::cout << "Load From File" << std::endl;
+		player.loadGame();
+		break;
+	case 2:
+		glfwSetWindowShouldClose(window.window, true);
+		cleanModels();
+		SoundEngine->drop();
+		glfwTerminate();
+		exit(EXIT_SUCCESS);
+		break;
+	default:
+		std::cout << "How the hell did this case happen?" << std::endl;
+		break;
+	}
+
+
+	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/intro_1.obj", 20.0f);
+	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/intro_2.obj", 20.0f);
+	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/chapter_1.obj", 15.0f);
+*/
 	camera.Position = glm::vec3(0.0f, cameraYHeight, 90.0f);
 	camera.Pitch = 0.0f;
 	camera.updateCameraVectors();
@@ -137,7 +167,7 @@ int main() {
 
 	irrklang::ISound* wind_north = SoundEngine->play2D("sound/wind.wav", true, false, true);
 	//menu_theme->stop();
-	std::thread fadeOutMenuTheme(fadeOutMusic, menu_theme, 3.0f);
+	std::thread fadeOutMenuTheme(fadeOutMusic, menu_theme, 10.0f);
 	irrklang::ISound* north_theme = SoundEngine->play2D("sound/theme_north.wav", true, false, true);
 
 
@@ -163,12 +193,12 @@ int main() {
 
 		// 1. render depth of scene to texture (from light's perspective)
 		// --------------------------------------------------------------
-		renderDepth(simpleDepthShader, stage);
+		renderDepth(simpleDepthShader, player.data.stage);
 		//renderPointDepth(pointDepthShader);
 
 		// 2. render scene as normal using the generated depth/shadow map
 		// --------------------------------------------------------------
-		renderScene(shader, stage);
+		renderScene(shader, player.data.stage);
 		renderSkyBox(skyboxShader);
 
 		game(&window, shader, simpleDepthShader, skyboxShader);

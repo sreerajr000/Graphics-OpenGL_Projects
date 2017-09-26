@@ -7,11 +7,14 @@ OBJ_SRCS += \
 ../cyborg/IronThrone.obj \
 ../cyborg/bird.obj \
 ../cyborg/box.obj \
+../cyborg/chapter_1.obj \
 ../cyborg/crow.obj \
 ../cyborg/cyborg.obj \
 ../cyborg/frame.obj \
 ../cyborg/grass.obj \
 ../cyborg/img.obj \
+../cyborg/intro_1.obj \
+../cyborg/intro_2.obj \
 ../cyborg/landscape.obj \
 ../cyborg/landscape_grass.obj \
 ../cyborg/landscape_wall.obj \

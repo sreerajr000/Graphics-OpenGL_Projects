@@ -1,0 +1,30 @@
+/*
+ * player.h
+ *
+ *  Created on: 25-Sep-2017
+ *      Author: sree
+ */
+
+#ifndef PLAYER_H_
+#define PLAYER_H_
+#include <fstream>
+
+class Player{
+public:
+	int stage;
+	int score, daggers;
+	Player (){
+		stage = STAGE_1;
+		score = 0;
+	}
+
+	void saveGame() {
+		fstream out("save.dat", ios::out | ios::binary);
+		out << this;
+		out.close();
+	}
+};
+
+
+
+#endif /* PLAYER_H_ */

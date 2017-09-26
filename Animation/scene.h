@@ -14,7 +14,12 @@ float near_plane = -100.0f, far_plane = 100.0f;
 // lighting info
 // -------------
 glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
-
+vector<std::string> normalSkybox { "skybox/normal/right.jpg", "skybox/normal/left.jpg",
+			"skybox/normal/top.jpg", "skybox/normal/bottom.jpg", "skybox/normal/back.jpg",
+			"skybox/normal/front.jpg" };
+vector<std::string> tetrisSkybox { "skybox/tetris/right.tga", "skybox/tetris/left.tga",
+			"skybox/tetris/top.tga", "skybox/tetris/bottom.tga", "skybox/tetris/back.tga",
+			"skybox/tetris/front.tga" };
 
 // meshes
 unsigned int planeVAO;
@@ -33,6 +38,7 @@ void renderMenuContents(const Shader &shader) {
 	img->Draw(shader);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.01f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, selection * 0.13f));
 	shader.setMat4("model", model);
 	selectionBox->Draw(shader);
 
@@ -44,10 +50,9 @@ void renderMenuContents(const Shader &shader) {
 	throne->Draw(shader);
 }
 void renderStage1SceneContents(const Shader &shader) {
+	shader.setFloat("transition", 1.0f);
 	//Raven
 	model = glm::mat4();
-
-
 	model = glm::translate(model, camera.Position);
 	model = glm::translate(model, glm::vec3(2) * glm::vec3(camera.Front.x, -0.25f, camera.Front.z));
 	//model = glm::scale(model, glm::vec3(0.25f));
@@ -55,17 +60,6 @@ void renderStage1SceneContents(const Shader &shader) {
 	model = glm::rotate(model, float(glm::sin(glfwGetTime())) *0.25f, glm::vec3(1.0f, 1.0f, 1.0f));
 	raven->Draw(shader);
 
-	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(0.0f, 8.0f, 0.0f));
-
-	shader.setMat4("model", model);
-	animation->Draw(shader);
-	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(9.0f, 18.0f, -1.25f));
-	shader.setMat4("model", model);
-	backFrame->Draw(shader);
-	drawFrame(shader);
-	block->draw(shader);
 	// floor
 	model = glm::mat4();
 	shader.setMat4("model", model);
@@ -74,38 +68,9 @@ void renderStage1SceneContents(const Shader &shader) {
 	model = glm::mat4();
 	shader.setMat4("model", model);
 	landscape_wall->Draw(shader);
-
-
-	/*for(int i = 0; i < bodies.size(); i++){
-		if(bodies[i]->getCollisionShape()->getShapeType() == STATIC_PLANE_PROXYTYPE){
-			renderPlane(bodies[i], i);
-			shader.setMat4("model", model);
-			plane->Draw(shader);
-			//landscape->Draw(shader);
-			//model = glm::translate(model, glm::vec3(0.0, 5.0, 0.0));
-			//shader.setMat4("model", model);
-			//plane->Draw(shader);
-		}
-		else if(bodies[i]->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE){
-			renderSphere(bodies[i], i);
-			shader.setMat4("model", model);
-			sphere->Draw(shader);
-		}
-		else{
-			model = glm::mat4();
-			btTransform t;
-			bodies[i]->getMotionState()->getWorldTransform(t);
-			float mat[16];
-			t.getOpenGLMatrix(mat);
-			model = glm::make_mat4(mat);
-			shader.setMat4("model", model);
-			landscape->Draw(shader);
-		}
-	}
-	*/
 }
 
-void setUpSkyBox() {
+void setUpSkyBox(vector<std::string> faces) {
 	float skyboxVertices[] = {
 			// positions
 			-1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
@@ -138,9 +103,6 @@ void setUpSkyBox() {
 			(void*) 0);
 	// load textures
 	// -------------
-	vector<std::string> faces { "skybox/right.jpg", "skybox/left.jpg",
-			"skybox/top.jpg", "skybox/bottom.jpg", "skybox/back.jpg",
-			"skybox/front.jpg" };
 	cubemapTexture = loadCubemap(faces);
 }
 
@@ -323,11 +285,14 @@ void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShad
 		// input
 		// -----
 		//processInput(window->window);
-		if(stepFrame < duration / 2.0f){
-			transition = 2 * stepFrame/ duration;
+		if(stepFrame < duration / 3.0f){
+			transition = 6 * stepFrame/ duration;
 		}
-		else{
-			transition = 1 - (2 * stepFrame/ duration) + 1;
+		else if(stepFrame > 0.67f * duration){
+			transition = 2 * (1 - (2 * (stepFrame - 0.17f)/ duration) + 1);
+		}
+		else {
+			transition = 2.0f;
 		}
 		shader.setFloat("transition", transition);
 		if(stepFrame > duration){
@@ -341,6 +306,7 @@ void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShad
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if(glfwGetKey(window->window, GLFW_KEY_SPACE) == GLFW_PRESS){
+			SoundEngine->play2D("sound/menu_enter.wav");
 			break;
 		}
 		// 1. render depth of scene to texture (from light's perspective)
