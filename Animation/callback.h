@@ -17,22 +17,12 @@ bool ml = true;
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-//	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-//		throwSphere();
-//	}
+
 	if(cameraMove){
 		camera.ProcessKeyboard(FORWARD, deltaTime * 2, radius);
-//		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-//			camera.ProcessKeyboard(FORWARD, deltaTime * 2, radius);
-//		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-//			camera.ProcessKeyboard(BACKWARD, deltaTime * 2, radius);
-//		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-//			camera.ProcessKeyboard(LEFT, deltaTime * 2, radius);
-//		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-//			camera.ProcessKeyboard(RIGHT, deltaTime * 2, radius);
 	}
 	else{
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)

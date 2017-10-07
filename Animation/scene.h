@@ -13,7 +13,7 @@ glm::mat4 lightSpaceMatrix;
 float near_plane = -100.0f, far_plane = 100.0f;
 // lighting info
 // -------------
-glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+glm::vec3 lightPos(20.0f, 10.0f, 10.0f);
 vector<std::string> normalSkybox { "skybox/normal/right.jpg", "skybox/normal/left.jpg",
 			"skybox/normal/top.jpg", "skybox/normal/bottom.jpg", "skybox/normal/back.jpg",
 			"skybox/normal/front.jpg" };
@@ -29,7 +29,42 @@ unsigned int planeVAO;
 // renders the 3D scene
 // --------------------
 
+void renderMapContents(const Shader &shader){
+	shader.setFloat("transition", 1.25f);
+	model = glm::mat4();
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(5.0f));
+	shader.setMat4("model", model);
+	img->Draw(shader);
+
+
+	model = glm::mat4();
+	shader.setMat4("model", model);
+	Model pointer("cyborg/pointer.obj");
+	pointer.Draw(shader);
+}
+
 void renderMenuContents(const Shader &shader) {
+	shader.setFloat("transition", 5.0f);
+	model = glm::mat4();
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(5.0f));
+	shader.setMat4("model", model);
+	img->Draw(shader);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.01f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, selection * 0.13f));
+	shader.setMat4("model", model);
+	selectionBox->Draw(shader);
+
+	shader.setFloat("transition", 1.25f);
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(1.1f, 2.0f, 0.0f));
+	model = glm::rotate(model, -GLfloat(glfwGetTime() * 0.9f), glm::vec3(0.0f, 0.0f, 1.0f));
+	shader.setMat4("model", model);
+	throne->Draw(shader);
+}
+void renderEscapeMenuContents(const Shader &shader) {
 	shader.setFloat("transition", 5.0f);
 	model = glm::mat4();
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -180,6 +215,10 @@ void renderDepth(Shader simpleDepthShader, int flag) {
 		renderTransitionContents(simpleDepthShader);
 	else if (flag == MENU)
 		renderMenuContents(simpleDepthShader);
+	else if (flag == ESCAPE_MENU)
+		renderEscapeMenuContents(simpleDepthShader);
+	else if (flag == MAP)
+		renderMapContents(simpleDepthShader);
 	else if(flag == STAGE_1)
 		renderStage1SceneContents(simpleDepthShader);
 	else if(flag == TETRIS)
@@ -224,6 +263,10 @@ void renderScene(Shader shader, int flag) {
 		renderTransitionContents(shader);
 	else if(flag == MENU)
 		renderMenuContents(shader);
+	else if(flag == ESCAPE_MENU)
+		renderEscapeMenuContents(shader);
+	else if (flag == MAP)
+		renderMapContents(shader);
 	else if(flag == STAGE_1)
 		renderStage1SceneContents(shader);
 	else if(flag == TETRIS)
@@ -231,7 +274,7 @@ void renderScene(Shader shader, int flag) {
 }
 
 void loadModels() {
-//	cyborg = new Model("cyborg/cyborg.obj");
+	//cyborg = new Model("cyborg/cyborg.obj");
 	raven = new Model("cyborg/bird.obj");
 	planeScene = new Model("cyborg/test_scene.obj");
 	sphere = new Model("cyborg/sphere.obj");
@@ -261,6 +304,7 @@ void cleanModels() {
 }
 
 void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader, string image, float duration){
+	sf::Music music;
 	camera.Position = glm::vec3(0.0f, 5.0f, 0.0f);
 	camera.Pitch = -90.0f;
 	camera.updateCameraVectors();
@@ -306,7 +350,7 @@ void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShad
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if(glfwGetKey(window->window, GLFW_KEY_SPACE) == GLFW_PRESS){
-			SoundEngine->play2D("sound/menu_enter.wav");
+			enterSound.play();
 			break;
 		}
 		// 1. render depth of scene to texture (from light's perspective)

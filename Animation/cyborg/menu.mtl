@@ -11,3 +11,5 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd menu.png
+map_Ks menu.png
+map_Bump menu.png

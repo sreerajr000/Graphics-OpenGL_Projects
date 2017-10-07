@@ -7,13 +7,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <bullet/btBulletDynamicsCommon.h>
 #include <thread>
-#include <irrKlang.h>
+#include <SFML/Audio.hpp>
 
-using namespace irrklang;
-ISoundEngine *SoundEngine = createIrrKlangDevice();
+sf::Music dropSound, enterSound;
 
 enum STAGE{
-	LOGO, MENU, STAGE_1, TETRIS, STAGE_2
+	LOGO, MENU, ESCAPE_MENU, MAP, STAGE_1, TETRIS, STAGE_2
 };
 
 
@@ -33,6 +32,7 @@ btRigidBody *cameraBody;
 Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame, *animation, *raven, *landscape_wall, *img, *throne,
 	*selectionBox;
 Player player;
+
 bool tetrisStart = false;
 bool cameraMove = true;
 bool cameraMouseMove = true;
@@ -52,8 +52,6 @@ float lastY;
 
 #include <iostream>
 
-using namespace irrklang;
-
 
 int main() {
 	srand(time(NULL));
@@ -70,7 +68,17 @@ int main() {
 
 	player.data.stage = STAGE_1;
 
-	irrklang::ISound* menu_theme = SoundEngine->play2D("sound/menu_theme.wav", true, false, true);
+	sf::SoundBuffer themeBuffer;
+	if (!themeBuffer.loadFromFile("sound/menu_theme.wav"))
+		return -1;
+	sf::Sound menu_theme(themeBuffer);
+	menu_theme.setLoop(true);
+	menu_theme.play();
+	if (!enterSound.openFromFile("sound/menu_enter.wav"))
+		exit(EXIT_FAILURE);
+	if (!dropSound.openFromFile("sound/drop_beep.wav"))
+		exit(EXIT_FAILURE);
+
 
 	glfwSetFramebufferSizeCallback(window.window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window.window, mouse_callback);
@@ -123,7 +131,7 @@ int main() {
 	// -----------
 	block = new Block();
 
-/*	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
+	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
 
 	while(true){
 		renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/start.obj", 5.0f);
@@ -145,7 +153,6 @@ int main() {
 	case 2:
 		glfwSetWindowShouldClose(window.window, true);
 		cleanModels();
-		SoundEngine->drop();
 		glfwTerminate();
 		exit(EXIT_SUCCESS);
 		break;
@@ -158,17 +165,27 @@ int main() {
 	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/intro_1.obj", 20.0f);
 	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/intro_2.obj", 20.0f);
 	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/chapter_1.obj", 15.0f);
-*/
+
 	camera.Position = glm::vec3(0.0f, cameraYHeight, 90.0f);
 	camera.Pitch = 0.0f;
 	camera.updateCameraVectors();
 	cameraMove = true;
 
+	sf::SoundBuffer windBuffer;
+	if (!windBuffer.loadFromFile("sound/wind.wav"))
+		return -1;
+	sf::Sound wind(windBuffer);
+	wind.setLoop(true);
+	wind.play();
+	sf::SoundBuffer northBuffer;
+	if (!northBuffer.loadFromFile("sound/theme_north.wav"))
+		return -1;
+	sf::Sound northTheme(northBuffer);
+	northTheme.setLoop(true);
+	northTheme.play();
 
-	irrklang::ISound* wind_north = SoundEngine->play2D("sound/wind.wav", true, false, true);
-	//menu_theme->stop();
-	std::thread fadeOutMenuTheme(fadeOutMusic, menu_theme, 10.0f);
-	irrklang::ISound* north_theme = SoundEngine->play2D("sound/theme_north.wav", true, false, true);
+
+	std::thread fadeOutMenuTheme(fadeOutMusic, &menu_theme, 10.0f);
 
 
 	while (!glfwWindowShouldClose(window.window)) {
@@ -187,6 +204,8 @@ int main() {
 		// ------
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
 		//move();
 		//step simulation
 		//world->stepSimulation(deltaTime, deltaTime * 60 + 2);
@@ -202,6 +221,16 @@ int main() {
 		renderSkyBox(skyboxShader);
 
 		game(&window, shader, simpleDepthShader, skyboxShader);
+
+		if (glfwGetKey(window.window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+			Camera prevCamera(camera);
+			camera.Position = glm::vec3(0.0f, 5.0f, 0.0f);
+			camera.Pitch = -90.0f;
+			camera.Yaw = -90.0f;
+			camera.updateCameraVectors();
+			displayEscapeMenu(&window, shader, simpleDepthShader, skyboxShader);
+			camera = prevCamera;
+		}
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window.window);
@@ -212,7 +241,6 @@ int main() {
 	// optional: de-allocate all resources once they've outlived their purpose:
 	// ------------------------------------------------------------------------
 	//cleanPhysics();
-	SoundEngine->drop();
 	glfwTerminate();
 	return 0;
 }

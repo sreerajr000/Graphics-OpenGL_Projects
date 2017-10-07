@@ -1,8 +1,10 @@
-# Blender MTL File: 'box.blend'
-# Material Count: 1
+# Blender MTL File: 'None'
+# Material Count:  4
 
-newmtl Material
-Ns 96.078431
+
+
+newmtl Material.001
+Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
@@ -13,3 +15,41 @@ illum 2
 map_Kd box/frame.png
 map_Bump box/box_bumpmap.jpg
 map_Ks box/box_SPEC.jpg
+
+newmtl Material__489
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd cb32b5b83dc5d99375168593a103420b.jpg
+map_Bump maps/normal map.png
+
+newmtl Medieval_tower_very_low
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Medieval tower_mid_Col.jpg
+map_Bump Medieval tower_mid_Nor.jpg
+map_Ks Medieval tower_mid_Spec.jpg
+
+newmtl Medieval_tower_very_low_Medieval_tower_mid_Col.jpg
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Medieval tower_mid_Col.jpg
+map_Bump Medieval tower_mid_Nor.jpg
+map_Ks Medieval tower_mid_Spec.jpg

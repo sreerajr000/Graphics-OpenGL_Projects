@@ -1,0 +1,44 @@
+/*
+ * main.cu
+ *
+ *  Created on: 26-Sep-2017
+ *      Author: sree
+ */
+
+// A C / C++ program for Prim's Minimum Spanning Tree (MST) algorithm.
+// The program is for adjacency matrix representation of the graph
+
+#include <bits/stdc++.h>
+
+const int vertices = 1200;
+
+using namespace std;
+
+void primMSTSerial(int graph[vertices][vertices], int src) {
+	bool visited[vertices];
+	int d[vertices];
+	d[src] = 0;
+
+	for(int i = 0; i < vertices; i++){
+		if(!visited[i])
+		graph[src][]
+	}
+
+}
+
+
+
+int main() {
+	srand((unsigned)time(NULL));
+	int graph[vertices][vertices];
+
+	for(int i = 0; i < vertices; i++) {
+		for(int j = 0; j < vertices; j++){
+			i == j ? graph[i][j] = 0 : graph[i][j] = rand() % 100;
+		}
+	}
+
+	primMSTSerial(graph, 0);
+
+	return 0;
+}

@@ -10,6 +10,7 @@ OBJ_SRCS += \
 ../cyborg/chapter_1.obj \
 ../cyborg/crow.obj \
 ../cyborg/cyborg.obj \
+../cyborg/escape_menu.obj \
 ../cyborg/frame.obj \
 ../cyborg/grass.obj \
 ../cyborg/img.obj \
@@ -21,9 +22,11 @@ OBJ_SRCS += \
 ../cyborg/logo.obj \
 ../cyborg/menu.obj \
 ../cyborg/plane.obj \
+../cyborg/pointer.obj \
 ../cyborg/raven.obj \
 ../cyborg/selection_box.obj \
 ../cyborg/sphere.obj \
+../cyborg/stage1_map.obj \
 ../cyborg/start.obj \
 ../cyborg/test_scene.obj 
 

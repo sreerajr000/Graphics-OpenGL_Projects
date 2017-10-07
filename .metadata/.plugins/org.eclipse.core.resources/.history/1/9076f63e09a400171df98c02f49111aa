@@ -1,0 +1,354 @@
+#pragma once
+void renderScene(Shader, int);
+void renderDepth(Shader, int);
+void renderSkyBox(Shader);
+unsigned int depthMap;
+unsigned int skyboxVAO, skyboxVBO;
+unsigned int cubemapTexture;
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
+unsigned int depthMapFBO;
+glm::mat4 lightProjection, lightView;
+glm::mat4 lightSpaceMatrix;
+//glm::mat4 projection, view, model;
+float near_plane = -100.0f, far_plane = 100.0f;
+// lighting info
+// -------------
+glm::vec3 lightPos(20.0f, 10.0f, 10.0f);
+vector<std::string> normalSkybox { "skybox/normal/right.jpg", "skybox/normal/left.jpg",
+			"skybox/normal/top.jpg", "skybox/normal/bottom.jpg", "skybox/normal/back.jpg",
+			"skybox/normal/front.jpg" };
+vector<std::string> tetrisSkybox { "skybox/tetris/right.tga", "skybox/tetris/left.tga",
+			"skybox/tetris/top.tga", "skybox/tetris/bottom.tga", "skybox/tetris/back.tga",
+			"skybox/tetris/front.tga" };
+
+// meshes
+unsigned int planeVAO;
+#include "Tetris/tetris.h"
+
+#pragma once
+// renders the 3D scene
+// --------------------
+
+void renderMenuContents(const Shader &shader) {
+	shader.setFloat("transition", 5.0f);
+	model = glm::mat4();
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(5.0f));
+	shader.setMat4("model", model);
+	img->Draw(shader);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.01f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, selection * 0.13f));
+	shader.setMat4("model", model);
+	selectionBox->Draw(shader);
+
+	shader.setFloat("transition", 1.25f);
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(1.1f, 2.0f, 0.0f));
+	model = glm::rotate(model, -GLfloat(glfwGetTime() * 0.9f), glm::vec3(0.0f, 0.0f, 1.0f));
+	shader.setMat4("model", model);
+	throne->Draw(shader);
+}
+void renderEscapeMenuContents(const Shader &shader) {
+	shader.setFloat("transition", 1.0f);
+	model = glm::mat4();
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(5.0f));
+	shader.setMat4("model", model);
+	img->Draw(shader);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.01f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, selection * 0.13f));
+	shader.setMat4("model", model);
+	selectionBox->Draw(shader);
+
+	//shader.setFloat("transition", 1.25f);
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(1.1f, 2.0f, 0.0f));
+	model = glm::rotate(model, -GLfloat(glfwGetTime() * 0.9f), glm::vec3(0.0f, 0.0f, 1.0f));
+	shader.setMat4("model", model);
+	throne->Draw(shader);
+
+	model = glm::mat4();
+	shader.setMat4("model", model);
+	cyborg->Draw(shader);
+}
+void renderStage1SceneContents(const Shader &shader) {
+	shader.setFloat("transition", 1.0f);
+	//Raven
+	model = glm::mat4();
+	model = glm::translate(model, camera.Position);
+	model = glm::translate(model, glm::vec3(2) * glm::vec3(camera.Front.x, -0.25f, camera.Front.z));
+	//model = glm::scale(model, glm::vec3(0.25f));
+	model = glm::rotate(model, -glm::radians(camera.Yaw - 90), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, float(glm::sin(glfwGetTime())) *0.25f, glm::vec3(1.0f, 1.0f, 1.0f));
+	raven->Draw(shader);
+
+	// floor
+	model = glm::mat4();
+	shader.setMat4("model", model);
+	landscape->Draw(shader);
+	// floor
+	model = glm::mat4();
+	shader.setMat4("model", model);
+	landscape_wall->Draw(shader);
+}
+
+void setUpSkyBox(vector<std::string> faces) {
+	float skyboxVertices[] = {
+			// positions
+			-1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
+			-1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f,
+
+			-1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
+			1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
+
+			1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
+
+			-1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
+
+			-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
+
+			-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
+			-1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f };
+
+	// skybox VAO
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices,
+			GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+			(void*) 0);
+	// load textures
+	// -------------
+	cubemapTexture = loadCubemap(faces);
+}
+
+void renderSkyBox(Shader skyboxShader) {
+	// draw skybox as last
+	glDepthFunc (GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
+	skyboxShader.use();
+	view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
+	skyboxShader.setMat4("view", view);
+	skyboxShader.setMat4("projection", projection);
+	// skybox cube
+	glBindVertexArray(skyboxVAO);
+	glActiveTexture (GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	glDepthFunc (GL_LESS); // set depth function back to default
+
+}
+
+void setUpDepthMap() {
+	// configure depth map FBO
+	// -----------------------
+	glGenFramebuffers(1, &depthMapFBO);
+	// create depth texture
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH,
+			SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	// attach depth texture as FBO's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+			depthMap, 0);
+	glDrawBuffer (GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void renderTransitionContents(Shader shader) {
+	model = glm::mat4();
+	model = glm::scale(model, glm::vec3(5.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	img->Draw(shader);
+}
+
+void renderDepth(Shader simpleDepthShader, int flag) {
+	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane,
+			far_plane);
+	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	lightView = glm::lookAt(lightPos + camera.Position, camera.Position,
+			glm::vec3(0.0, 1.0, 0.0));
+	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), camera.Up);
+	lightSpaceMatrix = lightProjection * lightView;
+	// render scene from light's point of view
+	simpleDepthShader.use();
+	simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear (GL_DEPTH_BUFFER_BIT);
+
+	if(flag == LOGO)
+		renderTransitionContents(simpleDepthShader);
+	else if (flag == MENU)
+		renderMenuContents(simpleDepthShader);
+	else if (flag == ESCAPE_MENU)
+		renderEscapeMenuContents(simpleDepthShader);
+	else if(flag == STAGE_1)
+		renderStage1SceneContents(simpleDepthShader);
+	else if(flag == TETRIS)
+		renderTetrisSceneContents(simpleDepthShader);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// reset viewport
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void renderScene(Shader shader, int flag) {
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	shader.use();
+
+	projection = glm::perspective(camera.Zoom,
+			(float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 1000.0f);
+	view = camera.GetViewMatrix();
+	shader.setMat4("projection", projection);
+	shader.setMat4("view", view);
+	// set light uniforms
+	shader.setVec3("viewPos", camera.Position);
+	shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+	shader.setVec3("light.position", lightPos);
+	shader.setVec3("lightPos", lightPos);
+	shader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+	shader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+	shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	shader.setFloat("material.shininess", 32.0f);
+	shader.setFloat("far_plane", far_plane);
+	shader.setVec3("cameraPos", camera.Position);
+
+	//Point Light
+	//glActiveTexture(GL_TEXTURE3);
+	//glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
+
+	//Dir Light
+	glActiveTexture (GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	if(flag == LOGO)
+		renderTransitionContents(shader);
+	else if(flag == MENU)
+		renderMenuContents(shader);
+	else if(flag == ESCAPE_MENU)
+		renderEscapeMenuContents(shader);
+	else if(flag == STAGE_1)
+		renderStage1SceneContents(shader);
+	else if(flag == TETRIS)
+		renderTetrisSceneContents(shader);
+}
+
+void loadModels() {
+	//cyborg = new Model("cyborg/cyborg.obj");
+	raven = new Model("cyborg/bird.obj");
+	planeScene = new Model("cyborg/test_scene.obj");
+	sphere = new Model("cyborg/sphere.obj");
+	plane = new Model("cyborg/plane.obj");
+	landscape = new Model("cyborg/landscape.obj");
+	box = new Model("cyborg/box.obj");
+	backFrame = new Model("cyborg/frame.obj");
+	animation = new Model("cyborg/animation_test.dae");
+	landscape_wall = new Model("cyborg/landscape_wall.obj");
+	throne = new Model("cyborg/IronThrone.obj");
+	selectionBox = new Model("cyborg/selection_box.obj");
+}
+
+void cleanModels() {
+	//delete cyborg;
+	delete raven;
+	delete planeScene;
+	delete sphere;
+	delete plane;
+	delete landscape;
+	delete box;
+	delete backFrame;
+	delete animation;
+	delete landscape_wall;
+	delete throne;
+	delete selectionBox;
+}
+
+void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader, string image, float duration){
+	sf::Music music;
+	camera.Position = glm::vec3(0.0f, 5.0f, 0.0f);
+	camera.Pitch = -90.0f;
+	camera.updateCameraVectors();
+	cameraMove = false;
+	cameraMouseMove = false;
+	try{
+		delete img;
+	}
+	catch (const std::exception& e) {
+		std::cout << e.what() << std::endl;
+	}
+	img = new Model(image.c_str());
+	float transition = 0.0f;
+	while (!glfwWindowShouldClose(window->window)) {
+		glfwWaitEvents();
+		// per-frame time logic
+		// --------------------
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		stepFrame = stepFrame + deltaTime;
+		// input
+		// -----
+		//processInput(window->window);
+		if(stepFrame < duration / 3.0f){
+			transition = 6 * stepFrame/ duration;
+		}
+		else if(stepFrame > 0.67f * duration){
+			transition = 2 * (1 - (2 * (stepFrame - 0.17f)/ duration) + 1);
+		}
+		else {
+			transition = 2.0f;
+		}
+		shader.setFloat("transition", transition);
+		if(stepFrame > duration){
+			stepFrame = 0.0f;
+			break;
+		}
+
+		// render
+		// ------
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		if(glfwGetKey(window->window, GLFW_KEY_SPACE) == GLFW_PRESS){
+			enterSound.play();
+			break;
+		}
+		// 1. render depth of scene to texture (from light's perspective)
+		// --------------------------------------------------------------
+		renderDepth(simpleDepthShader, LOGO);
+		renderScene(shader, LOGO);
+		//renderSkyBox(skyboxShader);
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
+		glfwSwapBuffers(window->window);
+
+	}
+	shader.setFloat("transition", 1.0f);
+	cameraMouseMove = true;
+}
+

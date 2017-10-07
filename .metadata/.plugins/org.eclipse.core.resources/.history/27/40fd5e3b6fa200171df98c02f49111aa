@@ -1,0 +1,20 @@
+/*
+ * main.cu
+ *
+ *  Created on: 26-Sep-2017
+ *      Author: sree
+ */
+
+// A C / C++ program for Prim's Minimum Spanning Tree (MST) algorithm.
+// The program is for adjacency matrix representation of the graph
+
+#include <bits/stdc++.h>
+
+int V = 1200;
+
+using namespace std;
+
+int main() {
+	int graph[V][V];
+	return 0;
+}

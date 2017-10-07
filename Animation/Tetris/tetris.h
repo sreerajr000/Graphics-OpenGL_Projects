@@ -40,15 +40,16 @@ void display() {
 }
 
 void step() {
+	sf::Music music;
 	if(moveLeft){
-		SoundEngine->play2D("sound/drop_beep.wav");
+		dropSound.play();
 		moveLeft = false;
 		block->x--;
 		if(block->checkCollision())
 			block->x++;
 	}
 	else if(moveRight){
-		SoundEngine->play2D("sound/drop_beep.wav");
+		dropSound.play();
 		moveRight = false;
 		block->x++;
 		if(block->checkCollision())
@@ -59,7 +60,7 @@ void step() {
 		speed = 10;
 	}
 	else if(moveUp) {
-		SoundEngine->play2D("sound/drop_beep.wav");
+		dropSound.play();
 		moveUp = false;
 		block->rotateBlock();
 		if(block->checkCollision())
@@ -106,11 +107,14 @@ void renderTetrisSceneContents(const Shader &shader) {
 
 void gameStep(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader) {
 	block->y--;
-	SoundEngine->play2D("sound/drop_beep.wav");
+	sf::Music music;
+	dropSound.play();
 	if(block->checkCollision()){
 		block->addtoFrame();
 		float d = 0.0f;
-		SoundEngine->play2D("sound/spin.wav");
+		if (!music.openFromFile("sound/spin.wav"))
+			exit(EXIT_FAILURE); // error
+		music.play();
 		while (!glfwWindowShouldClose(window->window)) {
 			glfwWaitEvents();
 			d += 2 * deltaTime;
