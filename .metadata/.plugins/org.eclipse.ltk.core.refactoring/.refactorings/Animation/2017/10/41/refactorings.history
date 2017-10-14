@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Animation/Snake/block.h&apos; to &apos;snake_block.h&apos;" description="Rename resource &apos;block.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Snake/block.h" name="snake_block.h" stamp="1507807240958" updateReferences="true"/>
+</session>

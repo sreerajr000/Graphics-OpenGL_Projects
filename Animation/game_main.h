@@ -11,6 +11,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <SFML/Audio.hpp>
 
 void displayMap(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader){
 	cameraMove = false;
@@ -32,7 +33,7 @@ void displayMap(Window *window, Shader shader, Shader simpleDepthShader, Shader 
 	shader.setFloat("transition", 1.0f);
 	selection = 0;
 	while (!glfwWindowShouldClose(window->window)) {
-		glfwWaitEvents();
+		glfwPollEvents();
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -75,7 +76,7 @@ void displayMenu(Window *window, Shader shader, Shader simpleDepthShader, Shader
 	shader.setFloat("transition", 1.0f);
 	selection = 0;
 	while (!glfwWindowShouldClose(window->window)) {
-		glfwWaitEvents();
+		glfwPollEvents();
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -128,7 +129,7 @@ void displayEscapeMenu(Window *window, Shader shader, Shader simpleDepthShader, 
 	selection = 0;
 
 	while (!glfwWindowShouldClose(window->window)) {
-		glfwWaitEvents();
+		glfwPollEvents();
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -172,7 +173,9 @@ void displayEscapeMenu(Window *window, Shader shader, Shader simpleDepthShader, 
 	case 1:
 		//Display map and position
 		std::cout << "Displaying Map" << std::endl;
+		loadModels(MAP);
 		displayMap(window, shader, simpleDepthShader, skyboxShader);
+		cleanModels(MAP);
 		break;
 	case 2:
 		glfwSetWindowShouldClose(window->window, true);
@@ -199,8 +202,15 @@ void game(Window *window, Shader shader, Shader simpleDepthShader, Shader skybox
 			player.data.stage = TETRIS;
 			enterSound.play();
 			setUpSkyBox(tetrisSkybox);
+			cleanModels(player.data.stage);
+			loadModels(TETRIS);
 			runTetris(window, shader, simpleDepthShader, skyboxShader);
+			cleanModels(TETRIS);
+			player.data.stage = STAGE_2;
 		}
+		break;
+	case STAGE_2:
+
 		break;
 	default:
 		std::cout << "Default Stage\n";

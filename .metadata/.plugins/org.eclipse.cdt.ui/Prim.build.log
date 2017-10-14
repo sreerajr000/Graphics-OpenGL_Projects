@@ -1,34 +1,14 @@
-11:22:00 **** Incremental Build of configuration Debug for project Prim ****
+11:22:41 **** Incremental Build of configuration Debug for project Prim ****
 make all 
 Building file: ../main.cu
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
 Invoking: NVCC Compiler
 /usr/local/cuda-8.0/bin/nvcc -I/usr/local/cuda-8.0/samples/common/inc/ -G -g -O0 -gencode arch=compute_20,code=sm_20 -gencode arch=compute_20,code=sm_21  -odir "." -M -o "main.d" "../main.cu"
-nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
 /usr/local/cuda-8.0/bin/nvcc -I/usr/local/cuda-8.0/samples/common/inc/ -G -g -O0 --compile --relocatable-device-code=false -gencode arch=compute_20,code=compute_20 -gencode arch=compute_20,code=sm_21  -x cu -o  "main.o" "../main.cu"
 nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
-../main.cu(28): warning: variable "key" was set but never used
+../main.cu(89): warning: variable "parent" was set but never used
 
-../main.cu(29): warning: variable "mstSet" was set but never used
-
-../main.cu(30): warning: variable "parent" was set but never used
-
-../main.cu(82): warning: missing return statement at end of non-void function "printMST"
-
-../main.cu(150): warning: variable "start" was declared but never referenced
-
-../main.cu(150): warning: variable "stop" was declared but never referenced
-
-../main.cu(28): warning: variable "key" was set but never used
-
-../main.cu(29): warning: variable "mstSet" was set but never used
-
-../main.cu(30): warning: variable "parent" was set but never used
-
-../main.cu(82): warning: missing return statement at end of non-void function "printMST"
-
-../main.cu(150): warning: variable "start" was declared but never referenced
-
-../main.cu(150): warning: variable "stop" was declared but never referenced
+../main.cu(89): warning: variable "parent" was set but never used
 
 Finished building: ../main.cu
  
@@ -39,5 +19,5 @@ nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecat
 Finished building target: Prim
  
 
-11:22:01 Build Finished (took 1s.619ms)
+11:22:43 Build Finished (took 1s.828ms)
 

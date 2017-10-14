@@ -1,0 +1,172 @@
+/*
+ * main.cu
+ *
+ *  Created on: 26-Sep-2017
+ *      Author: sree
+ */
+
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <time.h>
+#include <helper_cuda.h>
+#include <helper_functions.h>
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
+
+timeval tStart;
+int timing() {
+	timeval tEnd;
+	gettimeofday(&tEnd, 0);
+	int t = (tEnd.tv_sec - tStart.tv_sec) * 1000000 + tEnd.tv_usec
+			- tStart.tv_usec;
+	tStart = tEnd;
+	return t;
+}
+// calculate the id of the current thread
+__device__ unsigned int getIdx(dim3* threads, dim3* blocks) {
+	int x;
+	return threadIdx.x + threadIdx.y * (x = threads->x) + threadIdx.z * (x *=
+			threads->y) + blockIdx.x * (x *= threads->z) + blockIdx.y * (x *=
+			blocks->z) + blockIdx.z * (x *= blocks->y);
+}
+
+//process only odd numbers of a specified block
+__device__ int gpuOddSingleBlock(const long from, const long to, bool *prime) {
+	const long memorySize = (to - from + 1) / 2;
+	// initialize
+	bool* isPrime = new bool[memorySize];
+	for (long i = 0; i < memorySize; i++)
+		isPrime[i] = 1;
+	for (long i = 3; i * i <= to; i += 2) {
+		if (i >= 3 * 3 && i % 3 == 0)
+			continue;
+		if (i >= 5 * 5 && i % 5 == 0)
+			continue;
+		if (i >= 7 * 7 && i % 7 == 0)
+			continue;
+		if (i >= 11 * 11 && i % 11 == 0)
+			continue;
+		if (i >= 13 * 13 && i % 13 == 0)
+			continue;
+		// skip numbers before current slice
+		long minJ = ((from + i - 1) / i) * i;
+		if (minJ < i * i)
+			minJ = i * i;
+		// start value must be odd
+		if ((minJ & 1) == 0)
+			minJ += i;
+		// find all odd non-primes
+		for (long j = minJ; j <= to; j += 2 * i) {
+			long index = j - from;
+			isPrime[index / 2] = 0;
+		}
+	}
+	// count primes in this block
+	long found = 0;
+	for (long i = 0; i < memorySize; i++){
+		found += isPrime[i];
+		if(isPrime[i] == 1)
+			prime[i] = true;
+	}
+	// 2 is not odd => include on demand
+	if (from <= 2)
+		found++;
+	delete[] isPrime;
+	return found;
+}
+
+
+__global__ void gpuSieve(bool *prime, long n, long nThreads, dim3* threads,
+		dim3* blocks) {
+	unsigned int idx = getIdx(threads, blocks);
+	long start = idx * (n / nThreads);
+	long end = min(start + (n / nThreads), n);
+	int t = gpuOddSingleBlock(start, end - 1, prime);
+}
+
+
+void sieveParallel(long n, dim3 threadsPerBlock, dim3 blocksPerGrid) {
+	bool *prime = new bool[n];
+	bool *device_prime;
+
+	dim3* deviceThreads;
+	dim3* deviceBlocks;
+
+	checkCudaErrors(cudaMalloc((void** )&device_prime, n * sizeof(bool)));
+	checkCudaErrors(cudaMalloc((void** )&deviceThreads, sizeof(dim3)));
+	checkCudaErrors(cudaMalloc((void** )&deviceBlocks, sizeof(dim3)));
+
+	checkCudaErrors(
+			cudaMemcpy(deviceThreads, &threadsPerBlock, sizeof(dim3),
+					cudaMemcpyHostToDevice));
+	checkCudaErrors(
+			cudaMemcpy(deviceBlocks, &blocksPerGrid, sizeof(dim3),
+					cudaMemcpyHostToDevice));
+
+	long nThreads = threadsPerBlock.x * threadsPerBlock.y * threadsPerBlock.z
+			* blocksPerGrid.x * blocksPerGrid.y * blocksPerGrid.z;
+	std::cout << "nThreads : " << nThreads << std::endl;
+
+	gpuSieve<<<blocksPerGrid, threadsPerBlock>>>(device_prime, n, nThreads,
+			deviceThreads, deviceBlocks);
+
+	cudaThreadSynchronize();
+	checkCudaErrors(cudaMemcpy(prime, device_prime, n * sizeof(bool), cudaMemcpyDeviceToHost));
+
+	for(long i = 2; i < n; i++){
+		if(prime[i])
+			std::cout << i << std::endl;
+	}
+
+	checkCudaErrors(cudaFree(device_prime));
+
+}
+
+void sieveSerial(long n) {
+	bool *nPrime = new bool[n];
+
+	for (int i = 2; i * i < n; i++) {
+		if (!nPrime[i]) {
+			for (int j = 2; j * i < n; j++)
+				nPrime[j * i] = true;
+		}
+	}
+	/*for(int i = 2; i < n; i++){
+	 if(!nPrime[i])
+	 std::cout << i << "\n";
+	 }*/
+}
+
+int main() {
+	//double start, stop;
+
+	srand((unsigned) time(NULL));
+
+	dim3 threadsPerBlock;
+	dim3 blocksPerGrid;
+
+	threadsPerBlock.x = 32;
+	threadsPerBlock.y = 24;
+	threadsPerBlock.z = 2;
+	blocksPerGrid.x = 1;
+	blocksPerGrid.y = 1;
+	blocksPerGrid.z = 1;
+
+	std::cout << "Total threads: "
+			<< threadsPerBlock.x * threadsPerBlock.y * threadsPerBlock.z
+					* blocksPerGrid.x * blocksPerGrid.y * blocksPerGrid.z
+			<< "\n\n";
+
+	timing();
+	long n = 100;
+	sieveSerial(n);
+
+	std::cout << timing() << " microseconds : PrimSerial\n";
+
+	sieveParallel(n, threadsPerBlock, blocksPerGrid);
+
+	std::cout << timing() << " microseconds : PrimParallel\n";
+
+	return 0;
+}

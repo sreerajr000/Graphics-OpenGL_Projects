@@ -31,7 +31,7 @@ Window::Window(GLint WIDTH, GLint HEIGHT, GLchar* TITLE) {
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	this->width = WIDTH;
 	this->height = HEIGHT;
-	window = glfwCreateWindow(this->width, this->height, TITLE, glfwGetPrimaryMonitor(), nullptr);
+	window = glfwCreateWindow(this->width, this->height, TITLE, nullptr, nullptr);
 }
 
 bool Window::createWindow() {

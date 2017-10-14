@@ -1,6 +1,75 @@
-10:36:16 **** Build of configuration Debug for project Animation ****
+09:20:13 **** Incremental Build of configuration Debug for project Animation ****
 make all 
-make: Nothing to be done for 'all'.
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -std=c++11 -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
+In file included from ../Tetris/tetris.h:12:0,
+                 from ../scene.h:26,
+                 from ../main.cpp:50:
+../Tetris/block.h: In member function ‘void Block::draw(Shader)’:
+../Tetris/block.h:38:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 0; i < blocks[blockid][orient].size(); i++) {
+                    ^
+../Tetris/block.h:39:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for(int j = 0; j < blocks[blockid][orient][i].size(); j++) {
+                     ^
+../Tetris/block.h: In member function ‘void Block::rotateBlock()’:
+../Tetris/block.h:53:49: warning: operation on ‘((Block*)this)->Block::orient’ may be undefined [-Wsequence-point]
+   orient = (++orient) % (blocks[blockid].size());
+                                                 ^
+../Tetris/block.h: In member function ‘void Block::urotateBlock()’:
+../Tetris/block.h:60:49: warning: operation on ‘((Block*)this)->Block::orient’ may be undefined [-Wsequence-point]
+   orient = (--orient) % (blocks[blockid].size());
+                                                 ^
+../Tetris/block.h: In member function ‘bool Block::checkCollision()’:
+../Tetris/block.h:67:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:68:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h:76:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:77:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h:85:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:86:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h: In member function ‘void Block::addtoFrame()’:
+../Tetris/block.h:104:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i < blk.size(); i++) {
+                     ^
+../Tetris/block.h:105:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j < blk[i].size(); j++) {
+                      ^
+In file included from ../scene.h:26:0,
+                 from ../main.cpp:50:
+../Tetris/tetris.h: In function ‘void drawFrame(const Shader&)’:
+../Tetris/tetris.h:17:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i < frame.size(); i++) {
+                   ^
+../Tetris/tetris.h:18:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int j = 0; j < frame[i].size(); j++) {
+                    ^
+../Tetris/tetris.h: In function ‘bool checkClear()’:
+../Tetris/tetris.h:76:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i < frame.size(); i++){
+                   ^
+../Tetris/tetris.h:78:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int j = 0; j < frame[i].size(); j++){
+                    ^
+Finished building: ../main.cpp
+ 
+Building target: Animation
+Invoking: GCC C++ Linker
+g++ -L/usr/local/lib -o "Animation"  ./main.o ./window.o   -lglfw -lsfml-audio -lpthread -lGL -lGLEW -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter -lBulletFileLoader -lIrrKlang
+Finished building target: Animation
+ 
 
-10:36:16 Build Finished (took 265ms)
+09:20:17 Build Finished (took 3s.832ms)
 

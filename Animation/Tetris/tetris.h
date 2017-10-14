@@ -13,7 +13,7 @@ std::vector<std::vector<int> > frame(18, std::vector<int>(10, 0));
 
 Block *block;
 
-void drawFrame(Shader shader) {
+void drawFrame(const Shader &shader) {
 	for(int i = 0; i < frame.size(); i++) {
 		for(int j = 0; j < frame[i].size(); j++) {
 			if(frame[i][j]) {
@@ -70,9 +70,9 @@ void step() {
 		speed = 1;
 }
 
-void checkClear(){
+bool checkClear(){
 	vector<vector<int> > newFrame;
-	int ct = 0;
+	static int score = 0;
 	for(int i = 0; i < frame.size(); i++){
 		bool flag = false;
 		for(int j = 0; j < frame[i].size(); j++){
@@ -85,13 +85,17 @@ void checkClear(){
 			newFrame.push_back(frame[i]);
 		}
 		else{
-			ct++;
+			score++;
 		}
 	}
+	//std::cout << "Player Score : " <<  score << std::endl;
 	vector<int> zeroArray(10, 0);
 	while(newFrame.size() <= 18)
 		newFrame.push_back(zeroArray);
 	frame = newFrame;
+	clockDial->modelMatrix = glm::mat4();
+	clockDial->modelMatrix = glm::rotate(clockDial->modelMatrix, -glm::radians(score * 6.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	return score > 60;
 }
 
 void renderTetrisSceneContents(const Shader &shader) {
@@ -102,10 +106,17 @@ void renderTetrisSceneContents(const Shader &shader) {
 	backFrame->Draw(shader);
 	drawFrame(shader);
 	block->draw(shader);
+	model = glm::mat4();
+
+	model = glm::translate(model, glm::vec3(9.0f, 17.60f, 8.75f));
+	model = glm::translate(model, glm::vec3(-15.32439f, 1.91659f, -5.0f));
+
+	shader.setMat4("model", model);
+	clockDial->Draw(shader);
 
 }
 
-void gameStep(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader) {
+bool gameStep(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader) {
 	block->y--;
 	sf::Music music;
 	dropSound.play();
@@ -116,7 +127,7 @@ void gameStep(Window *window, Shader shader, Shader simpleDepthShader, Shader sk
 			exit(EXIT_FAILURE); // error
 		music.play();
 		while (!glfwWindowShouldClose(window->window)) {
-			glfwWaitEvents();
+			glfwPollEvents();
 			d += 2 * deltaTime;
 			if(d > 3.14f/2.0f)
 				break;
@@ -141,7 +152,7 @@ void gameStep(Window *window, Shader shader, Shader simpleDepthShader, Shader sk
 		delete block;
 		block = new Block();
 	}
-	checkClear();
+	return checkClear();
 }
 
 void runTetris(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader) {
@@ -150,7 +161,7 @@ void runTetris(Window *window, Shader shader, Shader simpleDepthShader, Shader s
 	camera.updateCameraVectors();
 	while (!glfwWindowShouldClose(window->window)) {
 		camera.Position = glm::vec3(8.0f, 15.0f, 31.0f);
-		glfwWaitEvents();
+		glfwPollEvents();
 		// per-frame time logic
 		// --------------------
 		float currentFrame = glfwGetTime();
@@ -170,7 +181,10 @@ void runTetris(Window *window, Shader shader, Shader simpleDepthShader, Shader s
 		//Game step
 		if(stepFrame > 1/GLfloat(speed)){
 			stepFrame = 0.0f;
-			gameStep(window, shader, simpleDepthShader, skyboxShader);
+			if(gameStep(window, shader, simpleDepthShader, skyboxShader)){
+				std::cout << "Tetris Level Finished !!! \n";
+				break;
+			}
 		}
 
 		renderDepth(simpleDepthShader, TETRIS);

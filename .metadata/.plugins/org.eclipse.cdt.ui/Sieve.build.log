@@ -1,0 +1,23 @@
+14:22:25 **** Incremental Build of configuration Debug for project Sieve ****
+make all 
+Building file: ../main.cu
+Invoking: NVCC Compiler
+/usr/local/cuda-8.0/bin/nvcc -I/usr/local/cuda-8.0/samples/common/inc/ -G -g -O0 -gencode arch=compute_20,code=sm_20 -gencode arch=compute_20,code=sm_21  -odir "." -M -o "main.d" "../main.cu"
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+/usr/local/cuda-8.0/bin/nvcc -I/usr/local/cuda-8.0/samples/common/inc/ -G -g -O0 --compile --relocatable-device-code=false -gencode arch=compute_20,code=compute_20 -gencode arch=compute_20,code=sm_21  -x cu -o  "main.o" "../main.cu"
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+../main.cu(72): warning: variable "blockSize" was declared but never referenced
+
+../main.cu(72): warning: variable "blockSize" was declared but never referenced
+
+Finished building: ../main.cu
+ 
+Building target: Sieve
+Invoking: NVCC Linker
+/usr/local/cuda-8.0/bin/nvcc --cudart static --relocatable-device-code=false -gencode arch=compute_20,code=compute_20 -gencode arch=compute_20,code=sm_21 -link -o  "Sieve"  ./main.o   -lcuda -lcudart
+nvcc warning : The 'compute_20', 'sm_20', and 'sm_21' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+Finished building target: Sieve
+ 
+
+14:22:27 Build Finished (took 1s.777ms)
+

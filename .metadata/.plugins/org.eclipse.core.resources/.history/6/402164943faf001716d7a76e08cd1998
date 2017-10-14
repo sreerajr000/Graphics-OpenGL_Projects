@@ -1,0 +1,21 @@
+/*
+ * block.h
+ *
+ *  Created on: 12-Oct-2017
+ *      Author: sree
+ */
+
+#ifndef BLOCK_H_
+#define BLOCK_H_
+
+class SnakeBlock{
+public:
+	int x, y;
+	SnakeBlock(int x_, int y_){
+		this.x = x_;
+		this.y = y_;
+	}
+};
+
+
+#endif /* BLOCK_H_ */

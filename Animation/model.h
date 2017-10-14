@@ -39,6 +39,9 @@ public:
 			gammaCorrection(gamma) {
 		loadModel(path);
 	}
+	Model(){
+
+	}
 
 	// draws the model, and thus all its meshes
 	void Draw(Shader shader) {
@@ -90,9 +93,6 @@ public:
 		btRigidBody* body = new btRigidBody(info);
 		return body;
 	}
-
-private:
-	/*  Functions   */
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 	void loadModel(string const &path) {
 		// read file via ASSIMP
@@ -113,6 +113,8 @@ private:
 		// process ASSIMP's root node recursively
 		processNode(scene->mRootNode, scene);
 	}
+private:
+	/*  Functions   */
 
 	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 	void processNode(aiNode *node, const aiScene *scene) {

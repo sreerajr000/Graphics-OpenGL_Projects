@@ -1,0 +1,163 @@
+/*
+ * main.cu
+ *
+ *  Created on: 26-Sep-2017
+ *      Author: sree
+ */
+
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <time.h>
+#include <helper_cuda.h>
+#include <helper_functions.h>
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
+
+typedef unsigned long long int uint64_t;
+
+timeval tStart;
+int timing() {
+	timeval tEnd;
+	gettimeofday(&tEnd, 0);
+	int t = (tEnd.tv_sec - tStart.tv_sec) * 1000000 + tEnd.tv_usec
+			- tStart.tv_usec;
+	tStart = tEnd;
+	return t;
+}
+// calculate the id of the current thread
+__device__ unsigned int getIdx(dim3* threads, dim3* blocks) {
+	int x;
+	return threadIdx.x + threadIdx.y * (x = threads->x) + threadIdx.z * (x *=
+			threads->y) + blockIdx.x * (x *= threads->z) + blockIdx.y * (x *=
+			blocks->z) + blockIdx.z * (x *= blocks->y);
+}
+
+__global__ static void sieveInitCUDA(char* primes)
+{
+   primes[0] = 1; // value of 1 means the number is NOT prime
+   primes[1] = 1; // numbers "0" and "1" are not prime numbers
+}
+
+__global__ static void sieveEvenNumbersCUDA(char* primes, uint64_t max)
+{
+   uint64_t index = blockIdx.x * blockDim.x *2 + threadIdx.x + threadIdx.x + 4;
+   if (index < max)
+      primes[index] = 1; // mark off the even numbers
+}
+
+__global__ static void sieveOfEratosthenesCUDA(char *primes, uint64_t max,
+                                               const uint64_t maxRoot)
+{
+   // get the starting index, sieve only odds starting at 3
+   // block 0: 3,   5,  7,  9, 11, 13, ...,  65
+   // block 1: 67, 69, 71, 73, 75, 77, ..., 129
+   uint64_t index = blockIdx.x * blockDim.x *2 + threadIdx.x + threadIdx.x + 3;
+
+   // make sure index won't go out of bounds, also don't start the execution
+   // on numbers that are already composite
+   if (index <= maxRoot && primes[index] == 0)
+   {
+      // mark off the composite numbers
+      for (int j = index * index; j < max; j += index)
+      {
+         primes[j] = 1;
+      }
+   }
+}
+
+
+__host__ void sieveParallel(char* primes, uint64_t max)
+{
+   int blockSize = 32;
+
+   char* d_Primes = NULL;
+   int sizePrimes = sizeof(char) * max;
+   uint64_t maxRoot = sqrt(max);
+
+   // allocate the primes on the device and set them to 0
+   checkCudaErrors(cudaMalloc(&d_Primes, sizePrimes));
+   checkCudaErrors(cudaMemset(d_Primes, 0, sizePrimes));
+
+   // make sure that there are no errors...
+   checkCudaErrors(cudaPeekAtLastError());
+
+   // setup the execution configuration
+   dim3 dimBlock(blockSize);
+   dim3 dimGrid(ceil(
+                   (maxRoot + dimBlock.x) / (double) dimBlock.x) / (double) 2);
+   dim3 dimGridEvens(ceil(
+                        (max + dimBlock.x) / (double) dimBlock.x) / (double) 2);
+
+   // if for some reason, the user wants to find primes below 32 @.@ ...
+   if (dimGridEvens.x < 1)
+      dimGridEvens.x = 1; // make sure this won't be a '0'
+
+   sieveInitCUDA<<<1, 1>>>(d_Primes); // launch a single thread to initialize
+   sieveEvenNumbersCUDA<<<dimGridEvens, dimBlock>>>(d_Primes, max);
+   sieveOfEratosthenesCUDA<<<dimGrid, dimBlock>>>(d_Primes, max, maxRoot);
+
+   // check for kernel errors
+   checkCudaErrors(cudaPeekAtLastError());
+   checkCudaErrors(cudaDeviceSynchronize());
+
+   // copy the results back
+   checkCudaErrors(cudaMemcpy(primes, d_Primes, sizePrimes, cudaMemcpyDeviceToHost));
+
+   /*for(int i = 2; i < max; i++){
+	   if(!primes[i])
+		   std::cout << i << std::endl;
+   }*/
+   // no memory leaks
+   checkCudaErrors(cudaFree(d_Primes));
+}
+
+void sieveSerial(long n) {
+	bool *nPrime = new bool[n];
+
+	for (int i = 2; i * i < n; i++) {
+		if (!nPrime[i]) {
+			for (int j = 2; j * i < n; j++)
+				nPrime[j * i] = true;
+		}
+	}
+	/*for(int i = 2; i < n; i++){
+	 if(!nPrime[i])
+	 std::cout << i << "\n";
+	 }*/
+}
+
+int main() {
+	//double start, stop;
+
+	srand((unsigned) time(NULL));
+
+	dim3 threadsPerBlock;
+	dim3 blocksPerGrid;
+
+	threadsPerBlock.x = 32;
+	threadsPerBlock.y = 24;
+	threadsPerBlock.z = 2;
+	blocksPerGrid.x = 1;
+	blocksPerGrid.y = 1;
+	blocksPerGrid.z = 1;
+
+	std::cout << "Total threads: "
+			<< threadsPerBlock.x * threadsPerBlock.y * threadsPerBlock.z
+					* blocksPerGrid.x * blocksPerGrid.y * blocksPerGrid.z
+			<< "\n\n";
+
+	timing();
+	long n = 10000000;
+	sieveSerial(n);
+
+	std::cout << timing() << " microseconds : PrimSerial\n";
+
+	char *prime = new char[n];
+	sieveParallel(prime, n);
+
+
+	std::cout << timing() << " microseconds : PrimParallel\n";
+
+	return 0;
+}

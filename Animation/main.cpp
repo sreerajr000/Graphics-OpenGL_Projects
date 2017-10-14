@@ -30,7 +30,7 @@ btRigidBody *cameraBody;
 #include "model.h"
 #include "player.h"
 Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame, *animation, *raven, *landscape_wall, *img, *throne,
-	*selectionBox;
+	*selectionBox, *clockDial;
 Player player;
 
 bool tetrisStart = false;
@@ -57,7 +57,8 @@ int main() {
 	srand(time(NULL));
 	//Create Window
 
-	Window window((GLchar*)"Game");
+	//Window window((GLchar*)"Game");
+	Window window(1024, 768, (GLchar*)"Game");
 	if (!window.createWindow()) {
 		return EXIT_FAILURE;
 	}
@@ -125,7 +126,8 @@ int main() {
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
 
-	loadModels();
+
+
 	//physicsSetUp();
 	// render loop
 	// -----------
@@ -140,8 +142,9 @@ int main() {
 		}
 	}
 
+	loadModels(MENU);
 	displayMenu(&window, shader, simpleDepthShader, skyboxShader);
-
+	cleanModels(MENU);
 
 	switch(selection){
 	case 0:
@@ -152,7 +155,7 @@ int main() {
 		break;
 	case 2:
 		glfwSetWindowShouldClose(window.window, true);
-		cleanModels();
+		//cleanModels();
 		glfwTerminate();
 		exit(EXIT_SUCCESS);
 		break;
@@ -186,10 +189,11 @@ int main() {
 
 
 	std::thread fadeOutMenuTheme(fadeOutMusic, &menu_theme, 10.0f);
+	loadModels(player.data.stage);
 
 
 	while (!glfwWindowShouldClose(window.window)) {
-		glfwWaitEvents();
+		glfwPollEvents();
 		// per-frame time logic
 		// --------------------
 		float currentFrame = glfwGetTime();
@@ -237,7 +241,6 @@ int main() {
 
 	}
 	fadeOutMenuTheme.join();
-	cleanModels();
 	// optional: de-allocate all resources once they've outlived their purpose:
 	// ------------------------------------------------------------------------
 	//cleanPhysics();

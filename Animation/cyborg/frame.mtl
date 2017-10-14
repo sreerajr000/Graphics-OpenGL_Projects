@@ -1,7 +1,50 @@
 # Blender MTL File: 'None'
-# Material Count:  4
+# Material Count: 8
 
+newmtl ClockFaceBack
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd wood/ClockFaceBackTexture.jpg
 
+newmtl ClockFaceFront
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd wood/clock_face.png
+
+newmtl ClockRidge
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd wood/bamboo-wood-semigloss-albedo.png
+map_Bump wood/bamboo-wood-semigloss-normal.png
+map_Ks wood/bamboo-wood-semigloss-metal.psd
+
+newmtl Lannister_Shield_Badge_mat
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
 
 newmtl Material.001
 Ns 92.156863
@@ -29,7 +72,7 @@ map_Kd cb32b5b83dc5d99375168593a103420b.jpg
 map_Bump maps/normal map.png
 
 newmtl Medieval_tower_very_low
-Ns 94.117647
+Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
@@ -42,7 +85,7 @@ map_Bump Medieval tower_mid_Nor.jpg
 map_Ks Medieval tower_mid_Spec.jpg
 
 newmtl Medieval_tower_very_low_Medieval_tower_mid_Col.jpg
-Ns 94.117647
+Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000

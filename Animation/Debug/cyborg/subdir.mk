@@ -8,6 +8,7 @@ OBJ_SRCS += \
 ../cyborg/bird.obj \
 ../cyborg/box.obj \
 ../cyborg/chapter_1.obj \
+../cyborg/clock_dial.obj \
 ../cyborg/crow.obj \
 ../cyborg/cyborg.obj \
 ../cyborg/escape_menu.obj \

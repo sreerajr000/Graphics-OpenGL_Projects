@@ -29,6 +29,12 @@ unsigned int planeVAO;
 // renders the 3D scene
 // --------------------
 
+void renderStage2SceneContents(const Shader &shader){
+	shader.setFloat("transition", 1.0f);
+	model = glm::mat4();
+	shader.setMat4("model", model);
+}
+
 void renderMapContents(const Shader &shader){
 	shader.setFloat("transition", 1.25f);
 	model = glm::mat4();
@@ -223,6 +229,8 @@ void renderDepth(Shader simpleDepthShader, int flag) {
 		renderStage1SceneContents(simpleDepthShader);
 	else if(flag == TETRIS)
 		renderTetrisSceneContents(simpleDepthShader);
+	else if(flag == STAGE_2)
+		renderStage2SceneContents(simpleDepthShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	// reset viewport
@@ -271,37 +279,10 @@ void renderScene(Shader shader, int flag) {
 		renderStage1SceneContents(shader);
 	else if(flag == TETRIS)
 		renderTetrisSceneContents(shader);
+	else if(flag == STAGE_2)
+		renderStage2SceneContents(shader);
 }
 
-void loadModels() {
-	//cyborg = new Model("cyborg/cyborg.obj");
-	raven = new Model("cyborg/bird.obj");
-	planeScene = new Model("cyborg/test_scene.obj");
-	sphere = new Model("cyborg/sphere.obj");
-	plane = new Model("cyborg/plane.obj");
-	landscape = new Model("cyborg/landscape.obj");
-	box = new Model("cyborg/box.obj");
-	backFrame = new Model("cyborg/frame.obj");
-	animation = new Model("cyborg/animation_test.dae");
-	landscape_wall = new Model("cyborg/landscape_wall.obj");
-	throne = new Model("cyborg/IronThrone.obj");
-	selectionBox = new Model("cyborg/selection_box.obj");
-}
-
-void cleanModels() {
-	//delete cyborg;
-	delete raven;
-	delete planeScene;
-	delete sphere;
-	delete plane;
-	delete landscape;
-	delete box;
-	delete backFrame;
-	delete animation;
-	delete landscape_wall;
-	delete throne;
-	delete selectionBox;
-}
 
 void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader, string image, float duration){
 	sf::Music music;
@@ -319,7 +300,7 @@ void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShad
 	img = new Model(image.c_str());
 	float transition = 0.0f;
 	while (!glfwWindowShouldClose(window->window)) {
-		glfwWaitEvents();
+		glfwPollEvents();
 		// per-frame time logic
 		// --------------------
 		float currentFrame = glfwGetTime();
@@ -367,3 +348,53 @@ void renderImageTransition(Window *window, Shader shader, Shader simpleDepthShad
 	cameraMouseMove = true;
 }
 
+
+
+void loadModels(int flag) {
+	//cyborg = new Model("cyborg/cyborg.obj");
+	//animation = new Model("cyborg/animation_test.dae");
+	//planeScene = new Model("cyborg/test_scene.obj");
+	//plane = new Model("cyborg/plane.obj");
+	if(flag == MENU){
+		throne = new Model("cyborg/IronThrone.obj");
+		selectionBox = new Model("cyborg/selection_box.obj");
+	}
+	else if(flag == STAGE_1){
+		raven = new Model("cyborg/bird.obj");
+		landscape = new Model("cyborg/landscape.obj");
+		landscape_wall = new Model("cyborg/landscape_wall.obj");
+	}
+	else if(flag == MAP){
+		sphere = new Model("cyborg/sphere.obj");
+	}
+	else if(flag == TETRIS){
+		box = new Model("cyborg/box.obj");
+		backFrame = new Model("cyborg/frame.obj");
+		clockDial = new Model("cyborg/clock_dial.obj");
+	}
+}
+
+void cleanModels(int flag) {
+	//delete cyborg;
+	//delete animation;
+	//delete planeScene;
+	//delete plane;
+	if(flag == MENU){
+		delete throne;
+		delete selectionBox;
+	}
+	else if(flag == STAGE_1){
+		delete raven;
+		delete landscape;
+		delete landscape_wall;
+	}
+	else if(flag == MAP){
+		delete sphere;
+	}
+	else if(flag == TETRIS){
+		delete box;
+		delete backFrame;
+		delete clockDial;
+	}
+
+}
