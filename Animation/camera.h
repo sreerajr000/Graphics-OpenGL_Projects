@@ -80,7 +80,8 @@ public:
 		//std::cout << glm::distance(glm::vec3(0), Position)  << std::endl;
 		if(glm::distance(glm::vec3(0), Position) > radius)
 			Position = prevPosition;
-		Position.y = cameraYHeight;
+		if(cameraMove)
+			Position.y = cameraYHeight;
 	}
 
 	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

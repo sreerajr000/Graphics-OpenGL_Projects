@@ -1,0 +1,18 @@
+#include <string>
+#include "scene.h"
+#include "window.h"
+
+
+int main ()
+{
+	Window window(800, 600, (GLchar*)"Animation Test");
+	if (!window.createWindow()) {
+		return EXIT_FAILURE;
+	}
+	Scene example;
+	example.Loop ();
+
+
+	return 0;
+}
+

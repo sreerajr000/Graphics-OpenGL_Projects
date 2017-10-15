@@ -1,0 +1,41 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl Canvas
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.400000 0.400000 0.400000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump Canvas_N.png
+map_Kd Canvas_A.png
+map_Ks Canvas_S.png
+
+newmtl Frame
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.400000 0.400000 0.400000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump Frame_N.png
+map_Kd Frame_A.png
+map_Ks Frame_S.png
+
+newmtl Wheels
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.400000 0.400000 0.400000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump Wheel_N.png
+map_Kd Wheel_A.png
+map_Ks Wheel_S.png

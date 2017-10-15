@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;GPUSkinning/shader.h&apos; to &apos;shader_anim.h&apos;" description="Rename resource &apos;shader.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="shader.h" name="shader_anim.h" stamp="1508076102219" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;GPUSkinning/texture.h&apos; to &apos;texture_anim.h&apos;" description="Rename resource &apos;texture.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="texture.h" name="texture_anim.h" stamp="1508076114295" updateReferences="true"/>
+</session>

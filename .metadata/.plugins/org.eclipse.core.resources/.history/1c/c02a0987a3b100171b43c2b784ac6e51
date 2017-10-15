@@ -1,0 +1,43 @@
+#include <string>
+#include "scene.h"
+#include "window.h"
+
+
+int main ()
+{
+	Window window(800, 600, (GLchar*)"Animation Test");
+	if (!window.createWindow()) {
+		return EXIT_FAILURE;
+	}
+	//Scene example;
+	//example.Loop ();
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+	Renderer*	renderer_ = new Renderer ();
+	Shader* shader_= new Shader ("skinning.vert", "skinning.frag");
+	MD5Example* model_= new MD5Example ("Assets/Models/boblampclean.md5mesh", "Assets/Animations/boblampclean.md5anim");
+	ShaderMatrices* shader_mat_arr_= new ShaderMatrices ();
+	shader_mat_arr_->world_ = glm::rotate (glm::mat4 (1), glm::radians (-90.0f), glm::vec3 (1, 0, 0));
+	shader_mat_arr_->view_ = glm::lookAt (glm::vec3 (0.0f, 25.0f, 200.0f), glm::vec3 (0.0f, 25.0f, 0.0f), glm::vec3 (0.0f, 1.0f, 0.0f));
+	shader_mat_arr_->proj_ = renderer_->GetProjectionMatrix ();
+
+
+	while (!glfwWindowShouldClose(window.window)) {
+		glfwPollEvents();
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if(glfwGetKey(window.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window.window, true);
+
+
+
+
+		glfwSwapBuffers(window.window);
+	}
+	glfwTerminate();
+	return 0;
+}
+

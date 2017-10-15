@@ -210,7 +210,9 @@ void game(Window *window, Shader shader, Shader simpleDepthShader, Shader skybox
 		}
 		break;
 	case STAGE_2:
-
+		loadModels(SNAKE);
+		runSnake(window, shader, simpleDepthShader, skyboxShader);
+		cleanModels(SNAKE);
 		break;
 	default:
 		std::cout << "Default Stage\n";

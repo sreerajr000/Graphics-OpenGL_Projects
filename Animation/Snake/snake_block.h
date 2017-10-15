@@ -5,22 +5,37 @@
  *      Author: sree
  */
 
-#ifndef BLOCK_H_
-#define BLOCK_H_
+#pragma once
 
 class SnakeBlock{
 public:
-	int x, y;
-	SnakeBlock(int x_, int y_){
+	float x, y;
+	int scale;
+	int xSpeed, ySpeed;
+	bool isHead;
+	SnakeBlock(float x_, float y_, bool isHead_ = false){
 		x = x_;
 		y = y_;
+		xSpeed = 1;
+		ySpeed = 0;
+		scale = 1;
+		isHead = isHead_;
+	}
+	SnakeBlock(){
+
 	}
 	void Draw(const Shader &shader){
+		shader.setFloat("transition", 1.0f);
 		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(scale * x, 0.0f, scale * y));
 		shader.setMat4("model", model);
-		//Draw block
+		if(!isHead)
+			wagon->Draw(shader);
+		else{
+			wagon->Draw(shader);
+		}
 	}
 };
 
 
-#endif /* BLOCK_H_ */
+

@@ -1,0 +1,31 @@
+/*
+ * block.h
+ *
+ *  Created on: 12-Oct-2017
+ *      Author: sree
+ */
+
+#pragma once
+
+class SnakeBlock{
+public:
+	int x, y;
+	int scale;
+	SnakeBlock(int x_, int y_){
+		x = x_;
+		y = y_;
+		scale = 1;
+	}
+	SnakeBlock(){
+
+	}
+	void Draw(const Shader &shader){
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(scale * x, 0.0f, scale * y));
+		shader.setMat4("model", model);
+		//Draw block
+	}
+};
+
+
+

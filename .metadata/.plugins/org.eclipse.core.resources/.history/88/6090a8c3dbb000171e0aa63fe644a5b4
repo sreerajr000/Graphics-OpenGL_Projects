@@ -1,0 +1,37 @@
+/*
+ * block.h
+ *
+ *  Created on: 12-Oct-2017
+ *      Author: sree
+ */
+
+#pragma once
+
+class SnakeBlock{
+public:
+	float x, y;
+	int scale;
+	bool isHead;
+	SnakeBlock(float x_, float y_, bool isHead_ = false){
+		x = x_;
+		y = y_;
+		scale = 1;
+		isHead = isHead_;
+	}
+	SnakeBlock(){
+
+	}
+	void Draw(const Shader &shader){
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(scale * x, 0.0f, scale * y));
+		shader.setMat4("model", model);
+		if(!isHead)
+			wagon->Draw(shader);
+		else{
+			wagon->Draw(shader);
+		}
+	}
+};
+
+
+

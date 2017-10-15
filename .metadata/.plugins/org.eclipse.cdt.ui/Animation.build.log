@@ -1,4 +1,4 @@
-09:20:13 **** Incremental Build of configuration Debug for project Animation ****
+13:10:26 **** Incremental Build of configuration Debug for project Animation ****
 make all 
 Building file: ../main.cpp
 Invoking: GCC C++ Compiler
@@ -63,6 +63,20 @@ In file included from ../scene.h:26:0,
 ../Tetris/tetris.h:78:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
    for(int j = 0; j < frame[i].size(); j++){
                     ^
+In file included from ../scene.h:27:0,
+                 from ../main.cpp:50:
+../Snake/snake.h: In member function ‘void Snake::Draw(const Shader&)’:
+../Snake/snake.h:23:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 0; i < tail.size(); i++)
+                    ^
+../Snake/snake.h: In member function ‘void Snake::update()’:
+../Snake/snake.h:28:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 1; i < tail.size(); i++)
+                    ^
+../Snake/snake.h: In member function ‘void Snake::add()’:
+../Snake/snake.h:43:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 1; i < tail.size(); i++)
+                    ^
 Finished building: ../main.cpp
  
 Building target: Animation
@@ -71,5 +85,5 @@ g++ -L/usr/local/lib -o "Animation"  ./main.o ./window.o   -lglfw -lsfml-audio -
 Finished building target: Animation
  
 
-09:20:17 Build Finished (took 3s.832ms)
+13:10:29 Build Finished (took 3s.131ms)
 

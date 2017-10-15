@@ -29,7 +29,8 @@ OBJ_SRCS += \
 ../cyborg/sphere.obj \
 ../cyborg/stage1_map.obj \
 ../cyborg/start.obj \
-../cyborg/test_scene.obj 
+../cyborg/test_scene.obj \
+../cyborg/wagon.obj 
 
 
 # Each subdirectory must supply rules for building sources it contributes

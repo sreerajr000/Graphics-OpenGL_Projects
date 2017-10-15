@@ -1,0 +1,57 @@
+/*
+ * snake.h
+ *
+ *  Created on: 12-Oct-2017
+ *      Author: sree
+ */
+
+#ifndef SNAKE_H_
+#define SNAKE_H_
+
+#include <vector>
+#include "snake_block.h"
+
+class Snake{
+public:
+	std::vector<SnakeBlock> tail;
+	SnakeBlock head;
+};
+
+void renderSnakeContents(const Shader &shader){
+
+}
+
+void runSnake(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader){
+	camera.Pitch = 0.0f;
+	camera.Yaw = -90.0f;
+	camera.Position = glm::vec3(8.0f, 15.0f, 31.0f);
+	camera.updateCameraVectors();
+	while (!glfwWindowShouldClose(window->window)) {
+
+		glfwPollEvents();
+		// per-frame time logic
+		// --------------------
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		stepFrame = stepFrame + deltaTime;
+		// input
+		// -----
+		processInput(window->window);
+
+		// render
+		// ------
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+		renderDepth(simpleDepthShader, SNAKE);
+		renderScene(shader, SNAKE);
+		renderSkyBox(skyboxShader);
+		glfwSwapBuffers(window->window);
+
+	}
+}
+
+#endif /* SNAKE_H_ */

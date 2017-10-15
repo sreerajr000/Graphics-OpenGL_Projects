@@ -1,0 +1,41 @@
+19:34:41 **** Incremental Build of configuration Debug for project GPUSkinning ****
+make all 
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
+In file included from ../main.cpp:4:0:
+../shader_anim.h: In member function ‘void ShaderAnim::OutputShaderError(unsigned int)’:
+../shader_anim.h:167:16: warning: format not a string literal and no format arguments [-Wformat-security]
+  printf (buffer);
+                ^
+../shader_anim.h: In member function ‘void ShaderAnim::OutputLinkerError(unsigned int)’:
+../shader_anim.h:184:16: warning: format not a string literal and no format arguments [-Wformat-security]
+  printf (buffer);
+                ^
+In file included from ../md5_example.h:5:0,
+                 from ../main.cpp:5:
+../md5_model_data.h: In constructor ‘MD5ModelData::MD5ModelData(const string&)’:
+../md5_model_data.h:167:22: warning: variable ‘rotationInv’ set but not used [-Wunused-but-set-variable]
+      const glm::mat4 rotationInv = glm::transpose (rotation);
+                      ^
+../md5_model_data.h:168:22: warning: variable ‘translationInv’ set but not used [-Wunused-but-set-variable]
+      const glm::mat4 translationInv = glm::translate (glm::mat4 (1), -joint.pos_);
+                      ^
+../md5_model_data.h:189:31: warning: format not a string literal and no format arguments [-Wformat-security]
+       printf (texture.c_str ());
+                               ^
+../main.cpp: In function ‘int main()’:
+../main.cpp:40:60: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  shader_ = new ShaderAnim ("skinning.vert", "skinning.frag");
+                                                            ^
+../main.cpp:40:60: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+Finished building: ../main.cpp
+ 
+Building target: GPUSkinning
+Invoking: GCC C++ Linker
+g++  -o "GPUSkinning"  ./main.o ./window.o   -lGLEW -lSOIL -lglfw -lGL
+Finished building target: GPUSkinning
+ 
+
+19:34:42 Build Finished (took 1s.198ms)
+

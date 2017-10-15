@@ -1,0 +1,71 @@
+#include <string>
+#include "window.h"
+#include "helpers.h"
+#include "shader.h"
+#include "md5_example.h"
+#include "md5_model_data.h"
+#include "md5_anim_data.h"
+#include "md5_controller.h"
+
+
+GLFWwindow* window_;
+Shader* shader_;
+MD5Example* model_;
+ShaderMatrices* shader_mat_arr_;
+glm::mat4 proj_;
+
+
+int main ()
+{
+
+	Window window(600, 400, (GLchar*)"Game");
+	if (!window.createWindow()) {
+		return EXIT_FAILURE;
+	}
+
+	glClearColor (0.2f, 0.6f, 0.8f, 1.0f);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable (GL_BLEND);
+
+	glCullFace (GL_BACK);
+	glEnable (GL_CULL_FACE);
+
+	glDepthFunc (GL_LEQUAL);
+	glEnable (GL_DEPTH_TEST);
+
+	glViewport (0, 0, static_cast<int>(600), static_cast<int>(400));
+	proj_ = glm::perspective (glm::radians (45.0f), 600.0f / 400.0f, 0.01f, 1000.0f);
+
+	shader_ = new Shader ("skinning.vert", "skinning.frag");
+	model_ = new MD5Example ("Assets/Models/boblampclean.md5mesh", "Assets/Animations/boblampclean.md5anim");
+
+	shader_mat_arr_ = new ShaderMatrices ();
+	shader_mat_arr_->world_ = glm::rotate (glm::mat4 (1), glm::radians (-90.0f), glm::vec3 (1, 0, 0));
+	shader_mat_arr_->view_ = glm::lookAt (glm::vec3 (0.0f, 25.0f, 200.0f), glm::vec3 (0.0f, 25.0f, 0.0f), glm::vec3 (0.0f, 1.0f, 0.0f));
+	shader_mat_arr_->proj_ = proj_;
+
+
+
+	bool want_exit = false;
+
+	while (!want_exit)
+	{
+		glfwPollEvents();
+
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		model_->Update (1.0f / 3000.0f);
+
+
+		shader_->SetShader ();
+		shader_->SetShaderParameters (shader_mat_arr_, model_->anim_ctrl_->GetSkinnedPos (), model_->anim_ctrl_->GetSkinnedRot ());
+
+		model_->Render ();
+
+		glfwSwapBuffers(window.window);
+		if(glfwGetKey(window.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			want_exit = true;
+	}
+	glfwTerminate();
+	return 0;
+}
+

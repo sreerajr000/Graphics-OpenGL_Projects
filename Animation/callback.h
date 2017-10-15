@@ -33,7 +33,7 @@ void processInput(GLFWwindow *window) {
 			camera.ProcessKeyboard(LEFT, deltaTime * 2, radius);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			camera.ProcessKeyboard(RIGHT, deltaTime * 2, radius);
-		}
+	}
 //	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
 //		moveForward = true;
 //		characterMoveForward();
