@@ -1,11 +1,32 @@
-13:10:26 **** Incremental Build of configuration Debug for project Animation ****
+10:34:09 **** Incremental Build of configuration Debug for project Animation ****
 make all 
 Building file: ../main.cpp
 Invoking: GCC C++ Compiler
 g++ -std=c++0x -std=c++11 -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
+In file included from ../main.cpp:13:0:
+../shader_anim.h: In member function ‘void ShaderAnim::OutputShaderError(unsigned int)’:
+../shader_anim.h:167:16: warning: format not a string literal and no format arguments [-Wformat-security]
+  printf (buffer);
+                ^
+../shader_anim.h: In member function ‘void ShaderAnim::OutputLinkerError(unsigned int)’:
+../shader_anim.h:184:16: warning: format not a string literal and no format arguments [-Wformat-security]
+  printf (buffer);
+                ^
+In file included from ../md5_example.h:5:0,
+                 from ../main.cpp:14:
+../md5_model_data.h: In constructor ‘MD5ModelData::MD5ModelData(const string&)’:
+../md5_model_data.h:167:22: warning: variable ‘rotationInv’ set but not used [-Wunused-but-set-variable]
+      const glm::mat4 rotationInv = glm::transpose (rotation);
+                      ^
+../md5_model_data.h:168:22: warning: variable ‘translationInv’ set but not used [-Wunused-but-set-variable]
+      const glm::mat4 translationInv = glm::translate (glm::mat4 (1), -joint.pos_);
+                      ^
+../md5_model_data.h:189:31: warning: format not a string literal and no format arguments [-Wformat-security]
+       printf (texture.c_str ());
+                               ^
 In file included from ../Tetris/tetris.h:12:0,
                  from ../scene.h:26,
-                 from ../main.cpp:50:
+                 from ../main.cpp:61:
 ../Tetris/block.h: In member function ‘void Block::draw(Shader)’:
 ../Tetris/block.h:38:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
    for(int i = 0; i < blocks[blockid][orient].size(); i++) {
@@ -48,7 +69,7 @@ In file included from ../Tetris/tetris.h:12:0,
     for (int j = 0; j < blk[i].size(); j++) {
                       ^
 In file included from ../scene.h:26:0,
-                 from ../main.cpp:50:
+                 from ../main.cpp:61:
 ../Tetris/tetris.h: In function ‘void drawFrame(const Shader&)’:
 ../Tetris/tetris.h:17:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
   for(int i = 0; i < frame.size(); i++) {
@@ -64,7 +85,7 @@ In file included from ../scene.h:26:0,
    for(int j = 0; j < frame[i].size(); j++){
                     ^
 In file included from ../scene.h:27:0,
-                 from ../main.cpp:50:
+                 from ../main.cpp:61:
 ../Snake/snake.h: In member function ‘void Snake::Draw(const Shader&)’:
 ../Snake/snake.h:23:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
    for(int i = 0; i < tail.size(); i++)
@@ -77,7 +98,17 @@ In file included from ../scene.h:27:0,
 ../Snake/snake.h:43:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
    for(int i = 1; i < tail.size(); i++)
                     ^
+../main.cpp: In function ‘int main()’:
+../main.cpp:116:60: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+  shader_ = new ShaderAnim ("skinning.vert", "skinning.frag");
+                                                            ^
+../main.cpp:116:60: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
 Finished building: ../main.cpp
+ 
+Building file: ../window.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -std=c++11 -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"window.d" -MT"window.d" -o "window.o" "../window.cpp"
+Finished building: ../window.cpp
  
 Building target: Animation
 Invoking: GCC C++ Linker
@@ -85,5 +116,5 @@ g++ -L/usr/local/lib -o "Animation"  ./main.o ./window.o   -lglfw -lsfml-audio -
 Finished building target: Animation
  
 
-13:10:29 Build Finished (took 3s.131ms)
+10:34:14 Build Finished (took 4s.939ms)
 

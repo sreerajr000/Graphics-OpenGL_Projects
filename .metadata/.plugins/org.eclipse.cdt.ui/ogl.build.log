@@ -1,0 +1,16 @@
+10:33:18 **** Build of configuration Debug for project ogl ****
+make all 
+Building file: ../Common/FreetypeGL/font-manager.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"Common/FreetypeGL/font-manager.d" -MT"Common/FreetypeGL/font-manager.d" -o "Common/FreetypeGL/font-manager.o" "../Common/FreetypeGL/font-manager.c"
+In file included from ../Common/FreetypeGL/font-manager.h:39:0,
+                 from ../Common/FreetypeGL/font-manager.c:37:
+../Common/FreetypeGL/texture-font.h:37:22: fatal error: ft2build.h: No such file or directory
+ #include <ft2build.h>
+                      ^
+compilation terminated.
+make: *** [Common/FreetypeGL/font-manager.o] Error 1
+Common/FreetypeGL/subdir.mk:43: recipe for target 'Common/FreetypeGL/font-manager.o' failed
+
+10:33:19 Build Finished (took 260ms)
+

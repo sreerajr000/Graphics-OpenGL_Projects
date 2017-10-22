@@ -1,0 +1,120 @@
+/*
+ * snake.h
+ *
+ *  Created on: 12-Oct-2017
+ *      Author: sree
+ */
+
+#ifndef SNAKE_H_
+#define SNAKE_H_
+
+#include <vector>
+#include "snake_block.h"
+
+class Snake{
+public:
+	std::vector<SnakeBlock> tail;
+	SnakeBlock head;
+
+	Snake(){
+
+	}
+	void Draw(const Shader &shader){
+		for(int i = 0; i < tail.size(); i++)
+			tail[i].Draw(shader);
+		head.Draw(shader);
+	}
+	void update(){
+		for(int i = 1; i < tail.size(); i++)
+			tail[i] = tail[i-1];
+		if(tail.size() > 0)
+			tail[0] = head;
+		head.x += head.scale * head.xSpeed;
+		head.y += head.scale * head.ySpeed;
+		if(head.x < -15.0f) head.x = -15.0f;
+		if(head.x > 15.0f) head.x = 15.0f;
+		if(head.y < -15.0f) head.y = -15.0f;
+		if(head.y > 15.0f) head.y = 15.0f;
+	}
+
+	void add(){
+		SnakeBlock tmp;
+		tail.push_back(tmp);
+		for(int i = 1; i < tail.size(); i++)
+			tail[i] = tail[i-1];
+		if(tail.size() > 0)
+			tail[0] = head;
+		head.x += head.scale * head.xSpeed;
+		head.y += head.scale * head.ySpeed;
+		if(head.x < -15.0f) head.x = -15.0f;
+		if(head.x > 15.0f) head.x = 15.0f;
+		if(head.y < -15.0f) head.y = -15.0f;
+		if(head.y > 15.0f) head.y = 15.0f;
+	}
+};
+
+Snake snake;
+
+
+void renderSnakeContents(const Shader &shader){
+	snake.Draw(shader);
+
+}
+
+void runSnake(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader){
+	camera.Pitch = 0.0f;
+	camera.Yaw = -90.0f;
+	camera.Position = glm::vec3(5.0f, 5.0f, 10.0f);
+	camera.updateCameraVectors();
+
+
+
+	while (!glfwWindowShouldClose(window->window)) {
+
+		glfwPollEvents();
+		// per-frame time logic
+		// --------------------
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		stepFrame = stepFrame + deltaTime;
+		// input
+		// -----
+		processInput(window->window);
+
+		if(glfwGetKey(window->window, GLFW_KEY_UP) == GLFW_PRESS){
+			snake.head.ySpeed = 1;
+			snake.head.xSpeed = 0;
+		}
+		if(glfwGetKey(window->window, GLFW_KEY_DOWN) == GLFW_PRESS){
+			snake.head.ySpeed = -1;
+			snake.head.xSpeed = 0;
+		}
+		if(glfwGetKey(window->window, GLFW_KEY_LEFT) == GLFW_PRESS){
+			snake.head.ySpeed = 0;
+			snake.head.xSpeed = -1;
+		}
+		if(glfwGetKey(window->window, GLFW_KEY_RIGHT) == GLFW_PRESS){
+			snake.head.ySpeed = 0;
+			snake.head.xSpeed = 1;
+		}
+		if(glfwGetKey(window->window, GLFW_KEY_Y) == GLFW_PRESS){
+			snake.add();
+		}
+		snake.update();
+		// render
+		// ------
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+		renderDepth(simpleDepthShader, SNAKE);
+		renderScene(shader, SNAKE);
+		renderSkyBox(skyboxShader);
+		glfwSwapBuffers(window->window);
+
+	}
+}
+
+#endif /* SNAKE_H_ */

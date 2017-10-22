@@ -1,0 +1,155 @@
+/*
+	Author: Karl Zylinski
+	Portfolio and blog: http://zylinski.se
+
+	Use, modify and copy in any way you want
+*/
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include "Mesh.h"
+#include <GL/glew.h>
+#include <SFML/Window/Window.hpp>
+#include <SFML/Window/Event.hpp>
+#include <GLShaderManager.h>
+#include <GLMatrixStack.h>
+#include <GLGeometryTransform.h>
+#include <GLFrame.h>
+#include <GLFrustum.h>
+#include <iostream>
+#include <cassert>
+#include "Model.h"
+
+using namespace std;
+
+bool LoadBMPTexture(const char *szFileName, GLenum minFilter, GLenum magFilter, GLenum wrapMode)	
+{
+	GLbyte *pBits;
+	GLint iWidth, iHeight;
+
+	pBits = gltReadBMPBits(szFileName, &iWidth, &iHeight);
+	if(pBits == NULL)
+		return false;
+
+	// Set Wrap modes
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+
+	// Do I need to generate mipmaps?
+	if(minFilter == GL_LINEAR_MIPMAP_LINEAR || minFilter == GL_LINEAR_MIPMAP_NEAREST || minFilter == GL_NEAREST_MIPMAP_LINEAR || minFilter == GL_NEAREST_MIPMAP_NEAREST)
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, iWidth, iHeight, 0, GL_BGR, GL_UNSIGNED_BYTE, pBits);
+	return true;
+}
+
+int main()
+{
+	sf::Window window(sf::VideoMode(800,600), "Animation");
+
+	GLenum err = glewInit();
+	if(err != GLEW_OK)
+	{
+		std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
+	}
+
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	LoadBMPTexture("tex.bmp", GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	GLuint shaderProgram;
+	GLFrame pov;
+	GLShaderManager shaderManager;
+	shaderProgram = shaderManager.LoadShaderPairWithAttributes("vertex.glsl", "fragment.glsl", 6,
+		0, "vPosition",
+		1, "vNormal",
+		2, "vTexCoord",
+		3, "vInfluences",
+		4, "vWeights",
+		5, "vNumWeights"
+	);
+
+	GLuint mvMatrixLocation = glGetUniformLocation(shaderProgram, "mvMatrix");
+	GLuint normalMatrixLocation = glGetUniformLocation(shaderProgram, "normalMatrix");
+	GLuint mvpMatrixLocation = glGetUniformLocation(shaderProgram, "mvpMatrix");
+	GLuint lightPosLocation = glGetUniformLocation(shaderProgram, "lightPosition");
+	GLuint locTexture = glGetUniformLocation(shaderProgram, "colorMap");
+	GLuint bonesLocation = glGetUniformLocation(shaderProgram, "bones");
+
+	Assimp::Importer i;
+	const aiScene* scene = i.ReadFile("JaiquaFromXSI.dae", aiProcess_GenSmoothNormals);
+	Model model(scene);
+
+	GLGeometryTransform pipeline;
+	GLMatrixStack modelViewMatrix;
+	GLMatrixStack projectionMatrix;
+	GLFrustum viewFrustum;
+	glViewport(0,0,800,600);
+	
+	pipeline.SetMatrixStacks(modelViewMatrix, projectionMatrix);
+	viewFrustum.SetPerspective(35.0f, float(800)/float(600), 1.0f, 100.0f);
+	projectionMatrix.LoadMatrix(viewFrustum.GetProjectionMatrix());
+	modelViewMatrix.LoadIdentity();
+	sf::Event evt;
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_MULTISAMPLE);
+	glFrontFace(GL_CCW);
+	glClearColor(0.1f,0.1f,0.1f,1);
+
+	gltCheckErrors();
+
+	GLfloat lightPos[] = { 40.0f, 25.0f, 25.0f };
+
+	sf::Clock timer;
+	pov.MoveForward(-10.0f);
+	while(window.isOpen())
+	{
+		model.update(timer.getElapsedTime().asSeconds());
+		timer.restart();
+		while(window.pollEvent(evt))
+		{
+			if(evt.type == sf::Event::Closed)
+				window.close();
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			pov.MoveForward(0.1f);
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			pov.MoveForward(-0.1f);
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			pov.RotateLocalY(0.01f);
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			pov.RotateLocalY(-0.01f);
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			pov.MoveUp(0.1f);
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+			pov.MoveUp(-0.1f);
+		
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		modelViewMatrix.PushMatrix();
+			M3DMatrix44f camera;
+			pov.GetCameraMatrix(camera);
+			modelViewMatrix.MultMatrix(camera);
+
+			glBindTexture(GL_TEXTURE_2D, texture);
+			glUseProgram(shaderProgram);
+			glUniformMatrix4fv(mvMatrixLocation, 1, GL_FALSE, pipeline.GetModelViewMatrix());
+			glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, pipeline.GetNormalMatrix());
+			glUniformMatrix4fv(mvpMatrixLocation, 1, GL_FALSE, pipeline.GetModelViewProjectionMatrix());
+			glUniform3fv(lightPosLocation, 1, lightPos);
+			glUniform1i(locTexture, 0);
+			
+			model.draw(bonesLocation);
+		modelViewMatrix.PopMatrix();
+		window.display();
+	}
+}

@@ -93,15 +93,6 @@ void renderEscapeMenuContents(const Shader &shader) {
 }
 void renderStage1SceneContents(const Shader &shader) {
 	shader.setFloat("transition", 1.0f);
-	//Raven
-	model = glm::mat4();
-	model = glm::translate(model, camera.Position);
-	model = glm::translate(model, glm::vec3(2) * glm::vec3(camera.Front.x, -0.25f, camera.Front.z));
-	//model = glm::scale(model, glm::vec3(0.25f));
-	model = glm::rotate(model, -glm::radians(camera.Yaw - 90), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, float(glm::sin(glfwGetTime())) *0.25f, glm::vec3(1.0f, 1.0f, 1.0f));
-	raven->Draw(shader);
-
 	// floor
 	model = glm::mat4();
 	shader.setMat4("model", model);
@@ -110,6 +101,30 @@ void renderStage1SceneContents(const Shader &shader) {
 	model = glm::mat4();
 	shader.setMat4("model", model);
 	landscape_wall->Draw(shader);
+	//Raven
+	//model = glm::mat4();
+	//model = glm::translate(model, camera.Position);
+	//model = glm::translate(model, glm::vec3(2) * glm::vec3(camera.Front.x, -0.25f, camera.Front.z));
+	//model = glm::scale(model, glm::vec3(0.25f));
+	//model = glm::rotate(model, -glm::radians(camera.Yaw - 90), glm::vec3(0.0f, 1.0f, 0.0f));
+	//model = glm::rotate(model, float(glm::sin(glfwGetTime())) *0.25f, glm::vec3(1.0f, 1.0f, 1.0f));
+	//raven->Draw(shader);
+	shader_mat_arr_->world_ = glm::mat4();
+	shader_mat_arr_->world_ = glm::translate(shader_mat_arr_->world_, camera.Position);
+	shader_mat_arr_->world_ = glm::translate(shader_mat_arr_->world_, glm::vec3(2) * glm::vec3(camera.Front.x, -0.25f, camera.Front.z));
+	shader_mat_arr_->world_ = glm::rotate(shader_mat_arr_->world_, -glm::radians(camera.Yaw - 90), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader_mat_arr_->world_ = glm::rotate (shader_mat_arr_->world_, glm::radians (-105.0f), glm::vec3 (1, 0, 0));
+	shader_mat_arr_->world_ = glm::rotate (shader_mat_arr_->world_, glm::radians (90.0f), glm::vec3 (0, 0, 1));
+	shader_mat_arr_->world_ = glm::rotate(shader_mat_arr_->world_, float(glm::sin(glfwGetTime())) *0.25f, glm::vec3(0.0f, 1.0f, 1.0f));
+	shader_mat_arr_->world_ = glm::scale(shader_mat_arr_->world_, glm::vec3(0.1f));
+	shader_mat_arr_->view_ = camera.GetViewMatrix();
+	shader_mat_arr_->proj_ = projection;
+	model_->Update (deltaTime / 10);
+	shader_->SetShader ();
+	shader_->SetShaderParameters (shader_mat_arr_, model_->anim_ctrl_->GetSkinnedPos (), model_->anim_ctrl_->GetSkinnedRot ());
+
+	model_->Render ();
+
 }
 
 void setUpSkyBox(vector<std::string> faces) {

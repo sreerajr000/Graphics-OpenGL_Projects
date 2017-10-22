@@ -1,0 +1,280 @@
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <stb_image.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <bullet/btBulletDynamicsCommon.h>
+#include <thread>
+#include <SFML/Audio.hpp>
+
+#include "helpers.h"
+#include "shader_anim.h"
+#include "md5_example.h"
+#include "md5_model_data.h"
+#include "md5_anim_data.h"
+#include "md5_controller.h"
+ShaderAnim* shader_;
+MD5Example* model_;
+ShaderMatrices* shader_mat_arr_;
+glm::mat4 proj_;
+
+sf::Music dropSound, enterSound;
+
+enum STAGE{
+	LOGO, MENU, ESCAPE_MENU, MAP, STAGE_1, TETRIS, STAGE_2, SNAKE
+};
+
+
+float cameraYHeight = 15.0f;
+bool tetrisStart = false;
+bool cameraMove = true;
+bool cameraMouseMove = true;
+#include "camera.h"
+glm::mat4 projection, view, model;
+int speed = 1;
+float stepFrame = 0.0f;
+float lastFrame = 0.0f;
+float deltaTime = 0.0f;
+int selection;
+// camera
+Camera camera(glm::vec3(0.0f, cameraYHeight, 90.0f));
+btRigidBody *cameraBody;
+#include "model.h"
+#include "player.h"
+Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame, *animation, *raven, *landscape_wall, *img, *throne,
+	*selectionBox, *clockDial, *wagon;
+Player player;
+
+// settings
+unsigned int SCR_WIDTH;
+unsigned int SCR_HEIGHT;
+float lastX;
+float lastY;
+
+#include "window.h"
+#include "shader.h"
+#include "model.h"
+#include "callback.h"
+//#include "physics_main.h"
+#include "scene.h"
+#include "game_main.h"
+
+#include <iostream>
+
+
+int main() {
+	srand(time(NULL));
+	//Create Window
+
+	//Window window((GLchar*)"Game");
+	Window window(1024, 768, (GLchar*)"Game");
+	if (!window.createWindow()) {
+		return EXIT_FAILURE;
+	}
+	SCR_WIDTH = window.width;
+	SCR_HEIGHT = window.height;
+	lastX = (float) SCR_WIDTH / 2.0;
+	lastY = (float) SCR_HEIGHT / 2.0;
+
+	player.data.stage = STAGE_2;
+
+	sf::SoundBuffer themeBuffer;
+	if (!themeBuffer.loadFromFile("sound/menu_theme.wav"))
+		return -1;
+	sf::Sound menu_theme(themeBuffer);
+	menu_theme.setLoop(true);
+	menu_theme.play();
+	if (!enterSound.openFromFile("sound/menu_enter.wav"))
+		exit(EXIT_FAILURE);
+	if (!dropSound.openFromFile("sound/drop_beep.wav"))
+		exit(EXIT_FAILURE);
+
+
+	glfwSetFramebufferSizeCallback(window.window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window.window, mouse_callback);
+	glfwSetKeyCallback(window.window, key_callback);
+	//glfwSetScrollCallback(window.window, scroll_callback);
+
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(window.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// configure global opengl state
+	// -----------------------------
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glCullFace (GL_BACK);
+	glEnable (GL_CULL_FACE);
+
+	glDepthFunc (GL_LEQUAL);
+	glEnable (GL_DEPTH_TEST);
+
+	proj_ = glm::perspective (glm::radians (45.0f), 600.0f / 400.0f, 0.01f, 1000.0f);
+
+	shader_ = new ShaderAnim ("skinning.vert", "skinning.frag");
+	model_ = new MD5Example ("Assets/Models/boblampclean.md5mesh", "Assets/Animations/boblampclean.md5anim");
+
+	shader_mat_arr_ = new ShaderMatrices ();
+
+	// build and compile shaders
+	// -------------------------
+	Shader shader("shadow_mapping.vs", "shadow_mapping.fs");
+	Shader simpleDepthShader("shadow_mapping_depth.vs",
+			"shadow_mapping_depth.fs");
+	Shader skyboxShader("skybox.vs", "skybox.fs");
+	//Shader pointDepthShader("point_shadows_depth.vs", "point_shadows_depth.fs", "point_shadows_depth.gs");
+
+	// set up vertex data (and buffer(s)) and configure vertex attributes
+	// ------------------------------------------------------------------
+
+
+	setUpSkyBox(normalSkybox);
+
+	setUpDepthMap();
+
+	// shader configuration
+	// --------------------
+	shader.use();
+	shader.setInt("material.diffuse", 0);
+	shader.setInt("material.specular", 1);
+	shader.setInt("material.normal", 2);
+	//Dir light
+	shader.setInt("shadowMap", 3);
+	//Point light
+	//shader.setInt("depthMap", 3);
+
+	skyboxShader.use();
+	skyboxShader.setInt("skybox", 0);
+
+
+
+	//physicsSetUp();
+	// render loop
+	// -----------
+	block = new Block();
+
+/*	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
+
+	while(true){
+		renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/start.obj", 5.0f);
+		if(glfwGetKey(window.window, GLFW_KEY_SPACE) == GLFW_PRESS){
+			break;
+		}
+	}
+
+	loadModels(MENU);
+	displayMenu(&window, shader, simpleDepthShader, skyboxShader);
+	cleanModels(MENU);
+
+	switch(selection){
+	case 0:
+		break;
+	case 1:
+		std::cout << "Load From File" << std::endl;
+		player.loadGame();
+		break;
+	case 2:
+		glfwSetWindowShouldClose(window.window, true);
+		//cleanModels();
+		glfwTerminate();
+		exit(EXIT_SUCCESS);
+		break;
+	default:
+		std::cout << "How the hell did this case happen?" << std::endl;
+		break;
+	}
+
+
+	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/intro_1.obj", 20.0f);
+	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/intro_2.obj", 20.0f);
+	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/chapter_1.obj", 15.0f);
+*/
+	//camera.Position = glm::vec3(0.0f, cameraYHeight, 90.0f);
+	camera.Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	camera.Pitch = 0.0f;
+	camera.updateCameraVectors();
+	cameraMove = false;
+
+	sf::SoundBuffer windBuffer;
+	if (!windBuffer.loadFromFile("sound/wind.wav"))
+		return -1;
+	sf::Sound wind(windBuffer);
+	wind.setLoop(true);
+	wind.play();
+	sf::SoundBuffer northBuffer;
+	if (!northBuffer.loadFromFile("sound/theme_north.wav"))
+		return -1;
+	sf::Sound northTheme(northBuffer);
+	northTheme.setLoop(true);
+	northTheme.play();
+
+
+	std::thread fadeOutMenuTheme(fadeOutMusic, &menu_theme, 10.0f);
+	loadModels(player.data.stage);
+
+
+	while (!glfwWindowShouldClose(window.window)) {
+		glfwPollEvents();
+		shader_mat_arr_->world_ = glm::rotate (glm::mat4 (1), glm::radians (-90.0f), glm::vec3 (1, 0, 0));
+		shader_mat_arr_->world_ = glm::scale(shader_mat_arr_->world_, glm::vec3(0.01f));
+		//shader_mat_arr_->view_ = glm::lookAt (glm::vec3 (0.0f, 25.0f, 200.0f), glm::vec3 (0.0f, 25.0f, 0.0f), glm::vec3 (0.0f, 1.0f, 0.0f));
+		shader_mat_arr_->view_ = camera.GetViewMatrix();
+		shader_mat_arr_->proj_ = proj_;
+		// per-frame time logic
+		// --------------------
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+		stepFrame = stepFrame + deltaTime;
+		// input
+		// -----
+		processInput(window.window);
+
+		// render
+		// ------
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		//move();
+		//step simulation
+		//world->stepSimulation(deltaTime, deltaTime * 60 + 2);
+
+		// 1. render depth of scene to texture (from light's perspective)
+		// --------------------------------------------------------------
+		renderDepth(simpleDepthShader, player.data.stage);
+		//renderPointDepth(pointDepthShader);
+
+		// 2. render scene as normal using the generated depth/shadow map
+		// --------------------------------------------------------------
+		renderScene(shader, player.data.stage);
+
+		renderSkyBox(skyboxShader);
+
+		game(&window, shader, simpleDepthShader, skyboxShader);
+
+		if (glfwGetKey(window.window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+			Camera prevCamera(camera);
+			camera.Position = glm::vec3(0.0f, 5.0f, 0.0f);
+			camera.Pitch = -90.0f;
+			camera.Yaw = -90.0f;
+			camera.updateCameraVectors();
+			displayEscapeMenu(&window, shader, simpleDepthShader, skyboxShader);
+			camera = prevCamera;
+		}
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
+
+		glfwSwapBuffers(window.window);
+
+	}
+	fadeOutMenuTheme.join();
+	// optional: de-allocate all resources once they've outlived their purpose:
+	// ------------------------------------------------------------------------
+	//cleanPhysics();
+	glfwTerminate();
+	return 0;
+}
+

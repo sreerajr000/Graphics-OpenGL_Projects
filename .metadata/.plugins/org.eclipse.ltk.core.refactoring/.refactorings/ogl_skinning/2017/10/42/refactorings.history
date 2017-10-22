@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;ogl_skinning/tutorial38.cpp&apos; to &apos;main.cpp&apos;" description="Rename resource &apos;tutorial38.cpp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="tutorial38.cpp" name="main.cpp" stamp="1508395900622" updateReferences="true"/>&#x0A;<refactoring comment="Move &apos;skinning.fs, skinning.vs&apos; to &apos;shaders&apos;" description="Move 2 resources to &apos;shaders&apos;" destination="shaders" element1="skinning.fs" element2="skinning.vs" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="2" stamp="1508400985776" updateReferences="true"/>
+</session>

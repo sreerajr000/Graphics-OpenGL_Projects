@@ -1,0 +1,15 @@
+16:48:18 **** Build of configuration Debug for project oglSkinning ****
+make all 
+Building file: ../Common/FreetypeGL/font-manager.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"Common/FreetypeGL/font-manager.d" -MT"Common/FreetypeGL/font-manager.d" -o "Common/FreetypeGL/font-manager.o" "../Common/FreetypeGL/font-manager.c"
+In file included from ../Common/FreetypeGL/texture-font.h:37:0,
+                 from ../Common/FreetypeGL/font-manager.h:39,
+                 from ../Common/FreetypeGL/font-manager.c:37:
+/usr/include/freetype2/ft2build.h:37:38: fatal error: freetype/config/ftheader.h: No such file or directory
+Common/FreetypeGL/subdir.mk:43: recipe for target 'Common/FreetypeGL/font-manager.o' failed
+compilation terminated.
+make: *** [Common/FreetypeGL/font-manager.o] Error 1
+
+16:48:18 Build Finished (took 216ms)
+

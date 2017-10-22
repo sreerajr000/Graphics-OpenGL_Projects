@@ -57,7 +57,16 @@ Snake snake;
 
 
 void renderSnakeContents(const Shader &shader){
-	snake.Draw(shader);
+	//snake.Draw(shader);
+	shader_mat_arr_->world_ = glm::rotate (glm::mat4 (1), glm::radians (-90.0f), glm::vec3 (1, 0, 0));
+	shader_mat_arr_->world_ = glm::scale(shader_mat_arr_->world_, glm::vec3(0.1f));
+	shader_mat_arr_->view_ = camera.GetViewMatrix();
+	shader_mat_arr_->proj_ = projection;
+	model_->Update (deltaTime / 10);
+	shader_->SetShader ();
+	shader_->SetShaderParameters (shader_mat_arr_, model_->anim_ctrl_->GetSkinnedPos (), model_->anim_ctrl_->GetSkinnedRot ());
+
+	model_->Render ();
 }
 
 void runSnake(Window *window, Shader shader, Shader simpleDepthShader, Shader skyboxShader){
@@ -111,6 +120,7 @@ void runSnake(Window *window, Shader shader, Shader simpleDepthShader, Shader sk
 		renderDepth(simpleDepthShader, SNAKE);
 		renderScene(shader, SNAKE);
 		renderSkyBox(skyboxShader);
+
 		glfwSwapBuffers(window->window);
 
 	}

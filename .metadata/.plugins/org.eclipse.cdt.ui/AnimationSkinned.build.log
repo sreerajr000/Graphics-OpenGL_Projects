@@ -1,0 +1,110 @@
+09:28:18 **** Incremental Build of configuration Debug for project AnimationSkinned ****
+make all 
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -std=c++11 -DDBT_USE_DOUBLE_PRECISION=1 -I/usr/local/include/bullet -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
+In file included from ../main.cpp:15:0:
+../shader_anim.h: In member function ‘void ShaderAnim::OutputShaderError(unsigned int)’:
+../shader_anim.h:167:16: warning: format not a string literal and no format arguments [-Wformat-security]
+  printf (buffer);
+                ^
+../shader_anim.h: In member function ‘void ShaderAnim::OutputLinkerError(unsigned int)’:
+../shader_anim.h:184:16: warning: format not a string literal and no format arguments [-Wformat-security]
+  printf (buffer);
+                ^
+In file included from ../md5_example.h:5:0,
+                 from ../main.cpp:16:
+../md5_model_data.h: In constructor ‘MD5ModelData::MD5ModelData(const string&)’:
+../md5_model_data.h:167:22: warning: variable ‘rotationInv’ set but not used [-Wunused-but-set-variable]
+      const glm::mat4 rotationInv = glm::transpose (rotation);
+                      ^
+../md5_model_data.h:168:22: warning: variable ‘translationInv’ set but not used [-Wunused-but-set-variable]
+      const glm::mat4 translationInv = glm::translate (glm::mat4 (1), -joint.pos_);
+                      ^
+../md5_model_data.h:189:31: warning: format not a string literal and no format arguments [-Wformat-security]
+       printf (texture.c_str ());
+                               ^
+In file included from ../Tetris/tetris.h:12:0,
+                 from ../scene.h:26,
+                 from ../main.cpp:62:
+../Tetris/block.h: In member function ‘void Block::draw(Shader)’:
+../Tetris/block.h:38:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 0; i < blocks[blockid][orient].size(); i++) {
+                    ^
+../Tetris/block.h:39:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for(int j = 0; j < blocks[blockid][orient][i].size(); j++) {
+                     ^
+../Tetris/block.h: In member function ‘void Block::rotateBlock()’:
+../Tetris/block.h:53:49: warning: operation on ‘((Block*)this)->Block::orient’ may be undefined [-Wsequence-point]
+   orient = (++orient) % (blocks[blockid].size());
+                                                 ^
+../Tetris/block.h: In member function ‘void Block::urotateBlock()’:
+../Tetris/block.h:60:49: warning: operation on ‘((Block*)this)->Block::orient’ may be undefined [-Wsequence-point]
+   orient = (--orient) % (blocks[blockid].size());
+                                                 ^
+../Tetris/block.h: In member function ‘bool Block::checkCollision()’:
+../Tetris/block.h:67:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:68:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h:76:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:77:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h:85:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int i = 0; i < blk.size(); i++) {
+                      ^
+../Tetris/block.h:86:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (int j = 0; j < blk[i].size(); j++) {
+                       ^
+../Tetris/block.h: In member function ‘void Block::addtoFrame()’:
+../Tetris/block.h:104:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (int i = 0; i < blk.size(); i++) {
+                     ^
+../Tetris/block.h:105:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    for (int j = 0; j < blk[i].size(); j++) {
+                      ^
+In file included from ../scene.h:26:0,
+                 from ../main.cpp:62:
+../Tetris/tetris.h: In function ‘void drawFrame(const Shader&)’:
+../Tetris/tetris.h:17:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i < frame.size(); i++) {
+                   ^
+../Tetris/tetris.h:18:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int j = 0; j < frame[i].size(); j++) {
+                    ^
+../Tetris/tetris.h: In function ‘bool checkClear()’:
+../Tetris/tetris.h:76:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  for(int i = 0; i < frame.size(); i++){
+                   ^
+../Tetris/tetris.h:78:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int j = 0; j < frame[i].size(); j++){
+                    ^
+In file included from ../scene.h:27:0,
+                 from ../main.cpp:62:
+../Snake/snake.h: In member function ‘void Snake::Draw(const Shader&)’:
+../Snake/snake.h:23:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 0; i < tail.size(); i++)
+                    ^
+../Snake/snake.h: In member function ‘void Snake::update()’:
+../Snake/snake.h:28:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 1; i < tail.size(); i++)
+                    ^
+../Snake/snake.h: In member function ‘void Snake::add()’:
+../Snake/snake.h:43:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(int i = 1; i < tail.size(); i++)
+                    ^
+Finished building: ../main.cpp
+ 
+Building target: AnimationSkinned
+Invoking: GCC C++ Linker
+g++ -L/usr/local/lib -o "AnimationSkinned"  ./main.o ./window.o   -lglfw -lsfml-audio -lpthread -lGL -lGLEW -lassimp -lSOIL -lBulletDynamics -lBulletCollision -lLinearMath -lBulletWorldImporter -lBulletFileLoader -lIrrKlang
+Finished building target: AnimationSkinned
+ 
+
+09:28:23 Build Finished (took 4s.137ms)
+

@@ -1,0 +1,15 @@
+15:58:31 **** Incremental Build of configuration Debug for project Skinning ****
+make all 
+Building file: ../Main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"Main.d" -MT"Main.d" -o "Main.o" "../Main.cpp"
+Finished building: ../Main.cpp
+ 
+Building target: Skinning
+Invoking: GCC C++ Linker
+g++  -o "Skinning"  ./Animation.o ./AnimationChannel.o ./AnimationController.o ./Bone.o ./Main.o ./Mesh.o ./Model.o   -lGLEW -lgltools -lsfml-system -lsfml-window -lassimp -lGL
+Finished building target: Skinning
+ 
+
+15:58:32 Build Finished (took 1s.365ms)
+

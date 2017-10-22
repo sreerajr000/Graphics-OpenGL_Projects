@@ -9,6 +9,17 @@
 #include <thread>
 #include <SFML/Audio.hpp>
 
+#include "helpers.h"
+#include "shader_anim.h"
+#include "md5_example.h"
+#include "md5_model_data.h"
+#include "md5_anim_data.h"
+#include "md5_controller.h"
+ShaderAnim* shader_;
+MD5Example* model_;
+ShaderMatrices* shader_mat_arr_;
+glm::mat4 proj_;
+
 sf::Music dropSound, enterSound;
 
 enum STAGE{
@@ -94,7 +105,19 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glCullFace (GL_BACK);
+	//glEnable (GL_CULL_FACE);
 
+	glDepthFunc (GL_LEQUAL);
+	glEnable (GL_DEPTH_TEST);
+
+	proj_ = glm::perspective (glm::radians (45.0f), 600.0f / 400.0f, 0.01f, 1000.0f);
+
+	shader_ = new ShaderAnim ("skinning.vert", "skinning.frag");
+	//model_ = new MD5Example ("Assets/Models/boblampclean.md5mesh", "Assets/Animations/boblampclean.md5anim");
+	//model_ = new MD5Example("cyborg/Guacamaya-2013fb24.md5mesh", "cyborg/Guacamaya-2013fb24.md5anim");
+	model_ = new MD5Example("cyborg/wolf.md5mesh", "cyborg/wolf.md5anim");
+	shader_mat_arr_ = new ShaderMatrices ();
 
 	// build and compile shaders
 	// -------------------------
@@ -133,7 +156,7 @@ int main() {
 	// -----------
 	block = new Block();
 
-/*	renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
+	/*renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/logo.obj", 30.0f);
 
 	while(true){
 		renderImageTransition(&window, shader, simpleDepthShader, skyboxShader, "cyborg/start.obj", 5.0f);
@@ -173,7 +196,7 @@ int main() {
 	camera.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	camera.Pitch = 0.0f;
 	camera.updateCameraVectors();
-	cameraMove = false;
+	//cameraMove = false;
 
 	sf::SoundBuffer windBuffer;
 	if (!windBuffer.loadFromFile("sound/wind.wav"))
@@ -192,7 +215,7 @@ int main() {
 	std::thread fadeOutMenuTheme(fadeOutMusic, &menu_theme, 10.0f);
 	loadModels(player.data.stage);
 
-
+	cameraMove = false;
 	while (!glfwWindowShouldClose(window.window)) {
 		glfwPollEvents();
 		// per-frame time logic
@@ -223,6 +246,7 @@ int main() {
 		// 2. render scene as normal using the generated depth/shadow map
 		// --------------------------------------------------------------
 		renderScene(shader, player.data.stage);
+
 		renderSkyBox(skyboxShader);
 
 		game(&window, shader, simpleDepthShader, skyboxShader);
@@ -238,6 +262,7 @@ int main() {
 		}
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
+
 		glfwSwapBuffers(window.window);
 
 	}

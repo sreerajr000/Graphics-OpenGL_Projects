@@ -1,0 +1,55 @@
+14:17:05 **** Incremental Build of configuration Debug for project ogl_skinning ****
+make all 
+Building file: ../main.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -I/usr/local/include -I/usr/include/ImageMagick-6 -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.d" -o "main.o" "../main.cpp"
+In file included from /usr/include/ImageMagick-6/Magick++/Include.h:13:0,
+                 from /usr/include/ImageMagick-6/Magick++.h:9,
+                 from ../main.cpp:25:
+/usr/include/ImageMagick-6/magick/magick-config.h:29:3: warning: #warning "you should set MAGICKCORE_QUANTUM_DEPTH to sensible default set it to configure time default" [-Wcpp]
+ # warning "you should set MAGICKCORE_QUANTUM_DEPTH to sensible default set it to configure time default"
+   ^
+/usr/include/ImageMagick-6/magick/magick-config.h:30:3: warning: #warning "this is an obsolete behavior please fix your makefile" [-Wcpp]
+ # warning "this is an obsolete behavior please fix your makefile"
+   ^
+/usr/include/ImageMagick-6/magick/magick-config.h:52:3: warning: #warning "you should set MAGICKCORE_HDRI_ENABLE to sensible default set it to configure time default" [-Wcpp]
+ # warning "you should set MAGICKCORE_HDRI_ENABLE to sensible default set it to configure time default"
+   ^
+/usr/include/ImageMagick-6/magick/magick-config.h:53:3: warning: #warning "this is an obsolete behavior please fix yours makefile" [-Wcpp]
+ # warning "this is an obsolete behavior please fix yours makefile"
+   ^
+../main.cpp: In function ‘int main(int, char**)’:
+../main.cpp:206:12: warning: deleting object of polymorphic class type ‘Tutorial38’ which has non-virtual destructor might cause undefined behaviour [-Wdelete-non-virtual-dtor]
+     delete pApp;
+            ^
+Finished building: ../main.cpp
+ 
+Building file: ../ogldev_texture.cpp
+Invoking: GCC C++ Compiler
+g++ -std=c++0x -I/usr/local/include -I/usr/include/ImageMagick-6 -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"ogldev_texture.d" -MT"ogldev_texture.d" -o "ogldev_texture.o" "../ogldev_texture.cpp"
+In file included from /usr/include/ImageMagick-6/Magick++/Include.h:13:0,
+                 from /usr/include/ImageMagick-6/Magick++.h:9,
+                 from ../ogldev_texture.h:25,
+                 from ../ogldev_texture.cpp:20:
+/usr/include/ImageMagick-6/magick/magick-config.h:29:3: warning: #warning "you should set MAGICKCORE_QUANTUM_DEPTH to sensible default set it to configure time default" [-Wcpp]
+ # warning "you should set MAGICKCORE_QUANTUM_DEPTH to sensible default set it to configure time default"
+   ^
+/usr/include/ImageMagick-6/magick/magick-config.h:30:3: warning: #warning "this is an obsolete behavior please fix your makefile" [-Wcpp]
+ # warning "this is an obsolete behavior please fix your makefile"
+   ^
+/usr/include/ImageMagick-6/magick/magick-config.h:52:3: warning: #warning "you should set MAGICKCORE_HDRI_ENABLE to sensible default set it to configure time default" [-Wcpp]
+ # warning "you should set MAGICKCORE_HDRI_ENABLE to sensible default set it to configure time default"
+   ^
+/usr/include/ImageMagick-6/magick/magick-config.h:53:3: warning: #warning "this is an obsolete behavior please fix yours makefile" [-Wcpp]
+ # warning "this is an obsolete behavior please fix yours makefile"
+   ^
+Finished building: ../ogldev_texture.cpp
+ 
+Building target: ogl_skinning
+Invoking: GCC C++ Linker
+g++  -o "ogl_skinning"  ./camera.o ./cubemap_texture.o ./glut_backend.o ./io_buffer.o ./main.o ./math_3d.o ./ogldev_app.o ./ogldev_backend.o ./ogldev_basic_lighting.o ./ogldev_basic_mesh.o ./ogldev_glfw_backend.o ./ogldev_shadow_map_fbo.o ./ogldev_skinned_mesh.o ./ogldev_texture.o ./ogldev_util.o ./ogldev_vulkan.o ./ogldev_vulkan_core.o ./ogldev_win32_control.o ./ogldev_xcb_control.o ./pipeline.o ./random_texture.o ./skinning_technique.o ./technique.o   -lfreetype -lGraphicsMagick++ -lglut -lassimp -lglfw -lGL -lGLEW
+Finished building target: ogl_skinning
+ 
+
+14:17:07 Build Finished (took 2s.322ms)
+
