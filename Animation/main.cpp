@@ -1,3 +1,5 @@
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
@@ -5,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <bullet/btBulletDynamicsCommon.h>
+//#include <bullet/btBulletDynamicsCommon.h>
 #include <thread>
 #include <SFML/Audio.hpp>
 
@@ -40,7 +42,7 @@ float deltaTime = 0.0f;
 int selection;
 // camera
 Camera camera(glm::vec3(0.0f, cameraYHeight, 90.0f));
-btRigidBody *cameraBody;
+//btRigidBody *cameraBody;
 #include "model.h"
 #include "player.h"
 Model *cyborg, *planeScene, *sphere, *plane, *landscape, *box, *backFrame, *animation, *raven, *landscape_wall, *img, *throne,

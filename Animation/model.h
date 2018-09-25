@@ -85,7 +85,7 @@ public:
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader, modelMatrix);
 	}
-
+/*
 	btRigidBody* createRigidBodyFromMesh(float mass, float x, float y,
 			float z) {
 		btTransform t;
@@ -130,6 +130,7 @@ public:
 		btRigidBody* body = new btRigidBody(info);
 		return body;
 	}
+ */
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 	void loadModel(string const &path) {
 		// read file via ASSIMP
